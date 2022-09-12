@@ -6,6 +6,10 @@ import { Routes, Route } from "react-router-dom";
 import { routes } from "./routes";
 import LogInView from "./components/LogInView";
 import RegisterView from "./components/RegisterView";
+import ProjectsPage from "./components/ProjectsPage";
+
+import { Provider } from "react-redux";
+import { store } from "./store";
 
 export const GLOBAL_THEME = createTheme({
   breakpoints: {
@@ -29,15 +33,18 @@ export const GLOBAL_THEME = createTheme({
 
 function App() {
   return (
-    <Container maxWidth="md">
+    <Provider store={store}>
       <ThemeProvider theme={GLOBAL_THEME}>
-        <Routes>
-          <Route path={routes.home.path} element={<HomePage />} />
-          <Route path={routes.login.path} element={<LogInView />} />
-          <Route path={routes.register.path} element={<RegisterView />} />
-        </Routes>
+        <Container maxWidth="md">
+          <Routes>
+            <Route path={routes.home.path} element={<HomePage />} />
+            <Route path={routes.login.path} element={<LogInView />} />
+            <Route path={routes.register.path} element={<RegisterView />} />
+            <Route path={routes.projects.path} element={<ProjectsPage />} />
+          </Routes>
+        </Container>
       </ThemeProvider>
-    </Container>
+    </Provider>
   );
 }
 

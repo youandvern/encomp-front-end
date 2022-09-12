@@ -63,7 +63,7 @@ export default function NavBar() {
               }}
             >
               {Object.values(routes).map((route) => (
-                <MenuItem key={route.path} onClick={handleCloseIconMenu}>
+                <MenuItem key={"menu-item-" + route.path} onClick={handleCloseIconMenu}>
                   <Typography textAlign="center">
                     <NavBarLink to={route.path}>{route.display}</NavBarLink>
                   </Typography>
@@ -74,9 +74,8 @@ export default function NavBar() {
 
           <Box sx={{ flexGrow: 1, display: { xs: "none", sm: "flex" } }}>
             {Object.values(routes).map((route) => (
-              <NavBarLink to={route.path}>
+              <NavBarLink key={"menu-link-" + route.path} to={route.path}>
                 <Button
-                  key={route.path}
                   onClick={handleCloseIconMenu}
                   sx={{ my: 2, color: "white", display: "block", fontWeight: "bold" }}
                 >

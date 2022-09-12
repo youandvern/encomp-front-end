@@ -12,4 +12,5 @@ export const routes: Record<string, RouteT> = {
     path: "/register",
     description: "The user registration in page",
   },
+  projects: { display: "Projects", path: "/projects", description: "The projects page" },
 };
