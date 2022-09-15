@@ -22,9 +22,5 @@ export default function ErrorManager() {
     }
   }, [errorMessage, errorStatus, clearError]);
 
-  useEffect(() => {
-    console.log("changed");
-  }, [clearError]);
-
   return <></>;
 }

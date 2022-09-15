@@ -1,11 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { AppDispatch, RootState } from "../store";
-import ProjectT from "../commonTypes/Project";
+import ProjectT, { ProjectDto } from "../commonTypes/Project";
 import { StatusT } from "../commonTypes/Status";
-import { apiDeleteProject, apiFetchProjects } from "../api";
+import { apiCreateProject, apiDeleteProject, apiFetchProjects } from "../api";
 import { errorsActions } from "./errors";
 
 export const GET_PROJECTS = "GET_PROJECTS";
+export const CREATE_PROJECT = "CREATE_PROJECT";
 export const DELETE_PROJECT = "DELETE_PROJECT";
 
 ///
@@ -14,12 +15,14 @@ export const DELETE_PROJECT = "DELETE_PROJECT";
 
 export interface ProjectsState {
   allProjects: ProjectT[];
+  currentProject: ProjectT | null;
   projectStatus: StatusT;
   actionSuccessful: boolean;
 }
 
 export const initialState: ProjectsState = {
   allProjects: [],
+  currentProject: null,
   projectStatus: "idle",
   actionSuccessful: true,
 };
@@ -29,6 +32,28 @@ export const initialState: ProjectsState = {
 ///
 
 export const fetchProjects = createAsyncThunk(GET_PROJECTS, apiFetchProjects);
+
+const createProject = createAsyncThunk(CREATE_PROJECT, async (projectDto: ProjectDto, thunkApi) => {
+  let project;
+  try {
+    project = await apiCreateProject(projectDto);
+  } catch (err) {
+    console.log(err);
+  }
+
+  if (project) {
+    return project;
+  } else {
+    thunkApi.dispatch(errorsActions.throwError(`Failed to crate project ${projectDto.name}.`));
+    return thunkApi.rejectWithValue(null);
+  }
+});
+
+export const createAndGetProject = (projectDto: ProjectDto) => async (dispatch: AppDispatch) => {
+  await dispatch(createProject(projectDto));
+  return await dispatch(fetchProjects());
+};
+
 const deleteProject = createAsyncThunk(DELETE_PROJECT, async (id: number, thunkApi) => {
   let deleted: boolean;
   try {
@@ -75,6 +100,13 @@ export const projects = createSlice({
       .addCase(fetchProjects.rejected, (state) => {
         state.projectStatus = "failed";
       })
+      .addCase(createProject.fulfilled, (state, action) => {
+        state.currentProject = action.payload;
+        state.actionSuccessful = true;
+      })
+      .addCase(createProject.rejected, (state) => {
+        state.actionSuccessful = false;
+      })
       .addCase(deleteProject.fulfilled, (state, action) => {
         state.actionSuccessful = action.payload;
       })
@@ -91,5 +123,10 @@ export const projects = createSlice({
 export const getProjects = (state: RootState) => state.projects.allProjects;
 export const getProjectsStatus = (state: RootState) => state.projects.projectStatus;
 
-export const projectsActions = { ...projects.actions, fetchProjects, deleteAndGetProject };
+export const projectsActions = {
+  ...projects.actions,
+  fetchProjects,
+  createAndGetProject,
+  deleteAndGetProject,
+};
 export default projects.reducer;

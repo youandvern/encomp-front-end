@@ -4,3 +4,8 @@ export default interface ProjectT {
   description?: string;
   created_on: string;
 }
+
+export interface ProjectDto {
+  name: string;
+  description?: string;
+}

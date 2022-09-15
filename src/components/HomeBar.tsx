@@ -1,5 +1,4 @@
 import React from "react";
-import "./style.css";
 import { Container, Grid, Typography, Link, ThemeProvider } from "@mui/material/";
 import HomeIcon from "@mui/icons-material/Home";
 import NavBar from "./NavBar";
