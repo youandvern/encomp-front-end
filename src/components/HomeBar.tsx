@@ -2,9 +2,8 @@ import React from "react";
 import "./style.css";
 import { Container, Grid, Typography, Link, ThemeProvider } from "@mui/material/";
 import HomeIcon from "@mui/icons-material/Home";
-import ENCOMP from "./ENCOMP.png";
-import NavBar from "../NavBar";
-import { GLOBAL_THEME } from "../../App";
+import NavBar from "./NavBar";
+import { GLOBAL_THEME } from "../App";
 
 // Home bar with logo nad menu options
 export default function HomeBar() {
@@ -17,7 +16,7 @@ export default function HomeBar() {
           <Grid item xs={8}>
             <Typography align="center">
               <a href="https://encompapp.com/">
-                <img src={ENCOMP} alt="Encomp Logo" className="main-logo"></img>
+                <img src="./ENCOMP.png" alt="Encomp Logo" className="main-logo"></img>
               </a>
             </Typography>
           </Grid>

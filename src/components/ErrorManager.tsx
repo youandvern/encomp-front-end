@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from "react";
-import { useAppSelector, useAppDispatch } from "../../hooks";
-import { getErrorMessage, getErrorStatus, errorsActions } from "../../reduxSlices/errors";
+import { useAppSelector, useAppDispatch } from "../hooks";
+import { getErrorMessage, getErrorStatus, errorsActions } from "../reduxSlices/errors";
 import _ from "lodash";
 
 // clears errors after time so that new errors will alert users

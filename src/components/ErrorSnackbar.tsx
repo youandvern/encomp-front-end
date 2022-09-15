@@ -1,7 +1,7 @@
 import { SyntheticEvent } from "react";
 import { Alert, Snackbar } from "@mui/material";
-import { useAppSelector, useAppDispatch } from "../../hooks";
-import { getErrorMessage, getErrorStatus, errorsActions } from "../../reduxSlices/errors";
+import { useAppSelector, useAppDispatch } from "../hooks";
+import { getErrorMessage, getErrorStatus, errorsActions } from "../reduxSlices/errors";
 
 // listens for new errors to display in an alert snackbar
 export default function ErrorSnackbar() {

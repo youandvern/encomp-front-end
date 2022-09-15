@@ -1,7 +1,7 @@
 import React from "react";
-import ProjectT from "../../commonTypes/Project";
-import { useAppDispatch } from "../../hooks";
-import { projectsActions } from "../../reduxSlices/projects";
+import ProjectT from "../commonTypes/Project";
+import { useAppDispatch } from "../hooks";
+import { projectsActions } from "../reduxSlices/projects";
 
 interface Props {
   project: ProjectT;

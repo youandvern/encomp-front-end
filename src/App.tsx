@@ -1,12 +1,12 @@
 import React from "react";
 import { createTheme, ThemeProvider, Container } from "@mui/material";
 import "./App.css";
-import HomePage from "./components/HomePage";
+import HomePage from "./components/Pages/HomePage";
 import { Routes, Route } from "react-router-dom";
 import { routes } from "./routes";
-import LogInView from "./components/LogInView";
-import RegisterView from "./components/RegisterView";
-import ProjectsPage from "./components/ProjectsPage";
+import LogInView from "./components/LoginForm";
+import RegisterView from "./components/RegisterForm";
+import ProjectsPage from "./components/Pages/ProjectsPage";
 
 import { Provider } from "react-redux";
 import { store } from "./store";

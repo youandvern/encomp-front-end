@@ -30,3 +30,8 @@ h6.title-text {
 div.small-margins {
   margin: 6px;
 }
+
+.main-logo {
+  object-fit: contain;
+  width: 100%;
+}
