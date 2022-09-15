@@ -1,8 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
 import projects from "./reduxSlices/projects";
+import errors from "./reduxSlices/errors";
 
 export const store = configureStore({
-  reducer: { projects },
+  reducer: { projects, errors },
   devTools: true,
 });
 

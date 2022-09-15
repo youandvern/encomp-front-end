@@ -1,4 +1,4 @@
-import { ProjectT } from "./commonTypes/Projects";
+import ProjectT from "./commonTypes/Project";
 
 ///
 /// Switch for production deployment

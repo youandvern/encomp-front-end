@@ -10,6 +10,8 @@ import ProjectsPage from "./components/ProjectsPage";
 
 import { Provider } from "react-redux";
 import { store } from "./store";
+import ErrorManager from "./components/ErrorManager";
+import ErrorSnackbar from "./components/ErrorSnackbar";
 
 export const GLOBAL_THEME = createTheme({
   breakpoints: {
@@ -36,6 +38,8 @@ function App() {
     <Provider store={store}>
       <ThemeProvider theme={GLOBAL_THEME}>
         <Container maxWidth="md">
+          <ErrorManager />
+          <ErrorSnackbar />
           <Routes>
             <Route path={routes.home.path} element={<HomePage />} />
             <Route path={routes.login.path} element={<LogInView />} />

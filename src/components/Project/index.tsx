@@ -1,5 +1,5 @@
 import React from "react";
-import { ProjectT } from "../../commonTypes/Projects";
+import ProjectT from "../../commonTypes/Project";
 import { useAppDispatch } from "../../hooks";
 import { projectsActions } from "../../reduxSlices/projects";
 
