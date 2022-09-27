@@ -1,4 +1,3 @@
-import { Container } from "@mui/material";
 import React, { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import Project from "../Project";
@@ -14,12 +13,12 @@ export default function ProjectsPage() {
   }, []);
 
   return (
-    <Container maxWidth="md" className="page-top-padding">
+    <>
       <CreateProjectForm />
       <h1>Projects:</h1>
       {projects.map((project) => (
         <Project key={"project-" + project.id} project={project} />
       ))}
-    </Container>
+    </>
   );
 }

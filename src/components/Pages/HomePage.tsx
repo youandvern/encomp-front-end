@@ -1,4 +1,3 @@
-import { Container } from "@mui/material";
 import React, { useState } from "react";
 import { useAppDispatch } from "../../hooks";
 import { errorsActions } from "../../reduxSlices/errors";
@@ -13,10 +12,10 @@ export default function HomePage() {
   };
 
   return (
-    <Container maxWidth="md" className="page-top-padding">
+    <>
       <h1>Welcome Home</h1>
       <p>Here's some interesting content.</p>
       <button onClick={signalNewAlert}>Alert</button>
-    </Container>
+    </>
   );
 }

@@ -1,4 +1,4 @@
-import { Box, Button, TextField } from "@mui/material";
+import { Box, Button, Container, TextField } from "@mui/material";
 import { Stack } from "@mui/system";
 import React, { ChangeEvent, FormEvent, useState } from "react";
 import { useAppDispatch } from "../hooks";
@@ -22,11 +22,12 @@ export default function CreateProjectForm() {
     event.preventDefault();
     dispatch(projectsActions.createAndGetProject(formValues));
   };
+
   return (
-    <>
-      <h1>Create a Project:</h1>
+    <Container maxWidth="sm">
       <Box component="form" onSubmit={handleSubmit}>
         <Stack spacing={2}>
+          <h1>Create a Project:</h1>
           <TextField
             required
             id="project-name"
@@ -48,6 +49,6 @@ export default function CreateProjectForm() {
           </Button>
         </Stack>
       </Box>
-    </>
+    </Container>
   );
 }

@@ -31,20 +31,31 @@ export const initialState: ProjectsState = {
 /// Actions
 ///
 
-export const fetchProjects = createAsyncThunk(GET_PROJECTS, apiFetchProjects);
+export const fetchProjects = createAsyncThunk(GET_PROJECTS, async (_, thunkApi) => {
+  try {
+    return await apiFetchProjects();
+  } catch (err) {
+    // display api call error message
+    thunkApi.dispatch(errorsActions.throwError(`Failed to get projects: ${err}`));
+    return thunkApi.rejectWithValue(null);
+  }
+});
 
+// TODO: clean up these try/catch blocks, double logging error
 const createProject = createAsyncThunk(CREATE_PROJECT, async (projectDto: ProjectDto, thunkApi) => {
   let project;
   try {
     project = await apiCreateProject(projectDto);
   } catch (err) {
+    // log api call error message
     console.log(err);
   }
 
+  // display pretty message
   if (project) {
     return project;
   } else {
-    thunkApi.dispatch(errorsActions.throwError(`Failed to crate project ${projectDto.name}.`));
+    thunkApi.dispatch(errorsActions.throwError(`Failed to create project ${projectDto.name}.`));
     return thunkApi.rejectWithValue(null);
   }
 });
@@ -95,7 +106,7 @@ export const projects = createSlice({
       })
       .addCase(fetchProjects.fulfilled, (state, action) => {
         state.projectStatus = "idle";
-        state.allProjects = action.payload;
+        state.allProjects = action.payload ? action.payload : initialState.allProjects;
       })
       .addCase(fetchProjects.rejected, (state) => {
         state.projectStatus = "failed";
