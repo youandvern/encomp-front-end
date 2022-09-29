@@ -3,9 +3,11 @@ import { RootState } from "../store";
 import { apiRegister, apiLogin } from "../api";
 import { errorsActions } from "./errors";
 import User, { UserLoginDto, UserRegisterDto } from "../commonTypes/User";
+import { projectsActions } from "./projects";
 
 export const LOGIN_USER = "LOGIN_USER";
 export const REGISTER_USER = "REGISTER_USER";
+export const LOGOUT_INTERNAL = "LOGOUT_INTERNAL";
 
 ///
 /// State
@@ -31,28 +33,33 @@ export const initialState: AuthState = {
 /// Actions
 ///
 
-export const loginUser = createAsyncThunk(LOGIN_USER, async (loginDto: UserLoginDto, thunkApi) => {
+const loginUser = createAsyncThunk(LOGIN_USER, async (loginDto: UserLoginDto, thunkApi) => {
   try {
     return await apiLogin(loginDto);
   } catch (err) {
     // display api call error message
-    thunkApi.dispatch(errorsActions.throwError(`Failed to login: ${err}`));
+    thunkApi.dispatch(errorsActions.throwError(`${err}`));
     return thunkApi.rejectWithValue(null);
   }
 });
 
-export const registerUser = createAsyncThunk(
+const registerUser = createAsyncThunk(
   REGISTER_USER,
   async (registerDto: UserRegisterDto, thunkApi) => {
     try {
       return await apiRegister(registerDto);
     } catch (err) {
       // display api call error message
-      thunkApi.dispatch(errorsActions.throwError(`Failed to register: ${err}`));
+      thunkApi.dispatch(errorsActions.throwError(`${err}`));
       return thunkApi.rejectWithValue(null);
     }
   }
 );
+
+const logoutUserInternal = createAsyncThunk(LOGOUT_INTERNAL, (_, thunkApi) => {
+  thunkApi.dispatch(authActions.setLoggedOut());
+  thunkApi.dispatch(projectsActions.clearProjectState());
+});
 
 ///
 /// Slice
@@ -62,11 +69,7 @@ export const auth = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    clearUser: (state) => {
-      state.user = initialState.user;
-      state.firstName = initialState.firstName;
-      state.surName = initialState.surName;
-    },
+    setLoggedOut: () => initialState,
   },
   extraReducers: (builder) => {
     builder
@@ -77,13 +80,16 @@ export const auth = createSlice({
       })
       .addCase(loginUser.rejected, (state) => {
         state.actionSuccessful = false;
+        state.loggedIn = false;
       })
       .addCase(registerUser.fulfilled, (state, action) => {
         state.user = action.payload;
         state.actionSuccessful = true;
+        state.loggedIn = true;
       })
       .addCase(registerUser.rejected, (state) => {
         state.actionSuccessful = false;
+        state.loggedIn = false;
       });
   },
 });
@@ -93,10 +99,12 @@ export const auth = createSlice({
 ///
 
 export const getUser = (state: RootState) => state.auth.user;
+export const isUserLoggedIn = (state: RootState) => state.auth.loggedIn;
 
 export const authActions = {
   ...auth.actions,
   loginUser,
   registerUser,
+  logoutUserInternal,
 };
 export default auth.reducer;

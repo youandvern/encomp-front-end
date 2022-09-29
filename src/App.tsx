@@ -8,8 +8,6 @@ import LogInView from "./components/LoginForm";
 import RegisterView from "./components/RegisterForm";
 import ProjectsPage from "./components/Pages/ProjectsPage";
 
-import { Provider } from "react-redux";
-import { store } from "./store";
 import ErrorManager from "./components/ErrorManager";
 import ErrorSnackbar from "./components/ErrorSnackbar";
 
@@ -33,22 +31,21 @@ export const GLOBAL_THEME = createTheme({
   },
 });
 
+// TODO: use authorized routes
 function App() {
   return (
-    <Provider store={store}>
-      <ThemeProvider theme={GLOBAL_THEME}>
-        <Container maxWidth="md">
-          <ErrorManager />
-          <ErrorSnackbar />
-          <Routes>
-            <Route path={routes.home.path} element={<HomePage />} />
-            <Route path={routes.login.path} element={<LogInView />} />
-            <Route path={routes.register.path} element={<RegisterView />} />
-            <Route path={routes.projects.path} element={<ProjectsPage />} />
-          </Routes>
-        </Container>
-      </ThemeProvider>
-    </Provider>
+    <ThemeProvider theme={GLOBAL_THEME}>
+      <Container maxWidth="md">
+        <ErrorManager />
+        <ErrorSnackbar />
+        <Routes>
+          <Route path={routes.home.path} element={<HomePage />} />
+          <Route path={routes.login.path} element={<LogInView />} />
+          <Route path={routes.register.path} element={<RegisterView />} />
+          <Route path={routes.projects.path} element={<ProjectsPage />} />
+        </Routes>
+      </Container>
+    </ThemeProvider>
   );
 }
 

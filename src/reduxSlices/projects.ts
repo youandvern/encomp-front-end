@@ -31,58 +31,41 @@ export const initialState: ProjectsState = {
 /// Actions
 ///
 
-export const fetchProjects = createAsyncThunk(GET_PROJECTS, async (_, thunkApi) => {
+const fetchProjects = createAsyncThunk(GET_PROJECTS, async (_, thunkApi) => {
   try {
     return await apiFetchProjects();
   } catch (err) {
     // display api call error message
-    thunkApi.dispatch(errorsActions.throwError(`Failed to get projects: ${err}`));
+    thunkApi.dispatch(errorsActions.throwError(`${err}`));
     return thunkApi.rejectWithValue(null);
   }
 });
 
-// TODO: clean up these try/catch blocks, double logging error
+// TODO: fetch user on app mount, logout if 401
 const createProject = createAsyncThunk(CREATE_PROJECT, async (projectDto: ProjectDto, thunkApi) => {
-  let project;
   try {
-    project = await apiCreateProject(projectDto);
+    return await apiCreateProject(projectDto);
   } catch (err) {
-    // log api call error message
-    console.log(err);
-  }
-
-  // display pretty message
-  if (project) {
-    return project;
-  } else {
-    thunkApi.dispatch(errorsActions.throwError(`Failed to create project ${projectDto.name}.`));
+    thunkApi.dispatch(errorsActions.throwError(`${err}`));
     return thunkApi.rejectWithValue(null);
   }
 });
 
-export const createAndGetProject = (projectDto: ProjectDto) => async (dispatch: AppDispatch) => {
+const createAndGetProject = (projectDto: ProjectDto) => async (dispatch: AppDispatch) => {
   await dispatch(createProject(projectDto));
   return await dispatch(fetchProjects());
 };
 
 const deleteProject = createAsyncThunk(DELETE_PROJECT, async (id: number, thunkApi) => {
-  let deleted: boolean;
   try {
-    deleted = await apiDeleteProject(id);
+    return await apiDeleteProject(id);
   } catch (err) {
-    console.log(err);
-    deleted = false;
-  }
-
-  if (deleted) {
-    return deleted;
-  } else {
-    thunkApi.dispatch(errorsActions.throwError("Failed to delete project."));
+    thunkApi.dispatch(errorsActions.throwError(`${err}`));
     return thunkApi.rejectWithValue(null);
   }
 });
 
-export const deleteAndGetProject = (id: number) => async (dispatch: AppDispatch) => {
+const deleteAndGetProject = (id: number) => async (dispatch: AppDispatch) => {
   await dispatch(deleteProject(id));
   return await dispatch(fetchProjects());
 };
@@ -98,6 +81,7 @@ export const projects = createSlice({
     clearProjects: (state) => {
       state.allProjects = [];
     },
+    clearProjectState: () => initialState,
   },
   extraReducers: (builder) => {
     builder

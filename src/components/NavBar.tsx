@@ -12,13 +12,21 @@ import MenuItem from "@mui/material/MenuItem";
 import { routes } from "../routes";
 import { Link } from "react-router-dom";
 import styled from "@emotion/styled";
+import { useAppSelector } from "../hooks";
+import { isUserLoggedIn, getUser } from "../reduxSlices/auth";
 
 const NavBarLink = styled(Link)({
   textDecoration: "none",
 });
 
+const shouldDisplay = (requiresLogin: boolean, isLoggedIn: boolean) =>
+  !(requiresLogin && !isLoggedIn);
+
 // adapted from https://mui.com/material-ui/react-app-bar/
 export default function NavBar() {
+  const user = useAppSelector(getUser);
+  const isLoggedIn = useAppSelector(isUserLoggedIn);
+
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
 
   const handleOpenIconMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -62,28 +70,33 @@ export default function NavBar() {
                 display: { xs: "block", md: "none" },
               }}
             >
-              {Object.values(routes).map((route) => (
-                <MenuItem key={"menu-item-" + route.path} onClick={handleCloseIconMenu}>
-                  <Typography textAlign="center">
-                    <NavBarLink to={route.path}>{route.display}</NavBarLink>
-                  </Typography>
-                </MenuItem>
-              ))}
+              {Object.values(routes)
+                .filter((route) => shouldDisplay(route.requireLogin, isLoggedIn))
+                .map((route) => (
+                  <MenuItem key={"menu-item-" + route.path} onClick={handleCloseIconMenu}>
+                    <Typography textAlign="center">
+                      <NavBarLink to={route.path}>{route.display}</NavBarLink>
+                    </Typography>
+                  </MenuItem>
+                ))}
             </Menu>
           </Box>
 
           <Box sx={{ flexGrow: 1, display: { xs: "none", sm: "flex" } }}>
-            {Object.values(routes).map((route) => (
-              <NavBarLink key={"menu-link-" + route.path} to={route.path}>
-                <Button
-                  onClick={handleCloseIconMenu}
-                  sx={{ my: 2, color: "white", display: "block", fontWeight: "bold" }}
-                >
-                  {route.display}
-                </Button>
-              </NavBarLink>
-            ))}
+            {Object.values(routes)
+              .filter((route) => shouldDisplay(route.requireLogin, isLoggedIn))
+              .map((route) => (
+                <NavBarLink key={"menu-link-" + route.path} to={route.path}>
+                  <Button
+                    onClick={handleCloseIconMenu}
+                    sx={{ my: 2, color: "white", display: "block", fontWeight: "bold" }}
+                  >
+                    {route.display}
+                  </Button>
+                </NavBarLink>
+              ))}
           </Box>
+          <Box sx={{ flexGrow: 0 }}>{isLoggedIn && user ? user.email : "logged out"}</Box>
         </Toolbar>
       </Container>
     </AppBar>
