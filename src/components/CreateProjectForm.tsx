@@ -21,6 +21,7 @@ export default function CreateProjectForm() {
   const handleSubmit = (event: FormEvent<HTMLDivElement>) => {
     event.preventDefault();
     dispatch(projectsActions.createAndGetProject(formValues));
+    setValues(defaultValues);
   };
 
   return (

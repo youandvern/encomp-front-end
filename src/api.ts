@@ -114,3 +114,8 @@ export async function apiRegister(registerDto: UserRegisterDto): Promise<User> {
     return Promise.reject(rejectMessage(response, "Failed to register user"));
   }
 }
+
+export async function apiGetUser(): Promise<User> {
+  const response = await fetch(API_BASE_URL + "auth/user/", { credentials: "include" });
+  return await commonApiReturn(response, "Failed to get project");
+}

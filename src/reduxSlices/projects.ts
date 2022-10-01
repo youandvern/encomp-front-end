@@ -17,14 +17,12 @@ export interface ProjectsState {
   allProjects: ProjectT[];
   currentProject: ProjectT | null;
   projectStatus: StatusT;
-  actionSuccessful: boolean;
 }
 
 export const initialState: ProjectsState = {
   allProjects: [],
   currentProject: null,
   projectStatus: "idle",
-  actionSuccessful: true,
 };
 
 ///
@@ -97,16 +95,22 @@ export const projects = createSlice({
       })
       .addCase(createProject.fulfilled, (state, action) => {
         state.currentProject = action.payload;
-        state.actionSuccessful = true;
+        state.projectStatus = "idle";
+      })
+      .addCase(createProject.pending, (state) => {
+        state.projectStatus = "loading";
       })
       .addCase(createProject.rejected, (state) => {
-        state.actionSuccessful = false;
+        state.projectStatus = "failed";
       })
       .addCase(deleteProject.fulfilled, (state, action) => {
-        state.actionSuccessful = action.payload;
+        state.projectStatus = "idle";
+      })
+      .addCase(deleteProject.pending, (state) => {
+        state.projectStatus = "loading";
       })
       .addCase(deleteProject.rejected, (state) => {
-        state.actionSuccessful = false;
+        state.projectStatus = "failed";
       });
   },
 });

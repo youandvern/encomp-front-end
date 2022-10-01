@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "../hooks";
 import { getErrorMessage, getErrorStatus, errorsActions } from "../reduxSlices/errors";
-import { isUserLoggedIn } from "../reduxSlices/auth";
+import { authActions, isUserLoggedIn } from "../reduxSlices/auth";
 import _ from "lodash";
 import { useNavigate } from "react-router-dom";
 
@@ -13,6 +13,7 @@ export default function ErrorManager() {
   const userLoggedIn = useAppSelector(isUserLoggedIn);
   const navigate = useNavigate();
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const clearError = useCallback(
     _.debounce(() => {
       dispatch(errorsActions.clearError());
@@ -20,11 +21,18 @@ export default function ErrorManager() {
     []
   );
 
+  // when app loads, check if user logged in
+  useEffect(() => {
+    dispatch(authActions.fetchUser());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // navigate home if logged out
   useEffect(() => {
     if (userLoggedIn === false) {
       navigate("/");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userLoggedIn]);
 
   useEffect(() => {

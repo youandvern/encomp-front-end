@@ -1,13 +1,16 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../store";
-import { apiRegister, apiLogin } from "../api";
+import { apiRegister, apiLogin, apiGetUser } from "../api";
 import { errorsActions } from "./errors";
 import User, { UserLoginDto, UserRegisterDto } from "../commonTypes/User";
 import { projectsActions } from "./projects";
+import { StatusT } from "../commonTypes/Status";
+import { stat } from "fs";
 
 export const LOGIN_USER = "LOGIN_USER";
 export const REGISTER_USER = "REGISTER_USER";
 export const LOGOUT_INTERNAL = "LOGOUT_INTERNAL";
+export const GET_USER = "GET_USER";
 
 ///
 /// State
@@ -18,7 +21,7 @@ export interface AuthState {
   loggedIn: boolean;
   firstName: string | null;
   surName: string | null;
-  actionSuccessful: boolean;
+  userStatus: StatusT;
 }
 
 export const initialState: AuthState = {
@@ -26,7 +29,7 @@ export const initialState: AuthState = {
   loggedIn: false,
   firstName: null,
   surName: null,
-  actionSuccessful: true,
+  userStatus: "idle",
 };
 
 ///
@@ -56,6 +59,15 @@ const registerUser = createAsyncThunk(
   }
 );
 
+const fetchUser = createAsyncThunk(GET_USER, async (_, thunkApi) => {
+  try {
+    return await apiGetUser();
+  } catch (err) {
+    thunkApi.dispatch(errorsActions.throwError(`${err}`));
+    return thunkApi.rejectWithValue(null);
+  }
+});
+
 const logoutUserInternal = createAsyncThunk(LOGOUT_INTERNAL, (_, thunkApi) => {
   thunkApi.dispatch(authActions.setLoggedOut());
   thunkApi.dispatch(projectsActions.clearProjectState());
@@ -75,21 +87,39 @@ export const auth = createSlice({
     builder
       .addCase(loginUser.fulfilled, (state, action) => {
         state.user = action.payload;
-        state.actionSuccessful = true;
+        state.userStatus = "idle";
         state.loggedIn = true;
       })
+      .addCase(loginUser.pending, (state) => {
+        state.userStatus = "loading";
+      })
       .addCase(loginUser.rejected, (state) => {
-        state.actionSuccessful = false;
         state.loggedIn = false;
+        state.userStatus = "failed";
+      })
+      .addCase(registerUser.pending, (state) => {
+        state.userStatus = "loading";
       })
       .addCase(registerUser.fulfilled, (state, action) => {
         state.user = action.payload;
-        state.actionSuccessful = true;
+        state.userStatus = "idle";
         state.loggedIn = true;
       })
       .addCase(registerUser.rejected, (state) => {
-        state.actionSuccessful = false;
         state.loggedIn = false;
+        state.userStatus = "failed";
+      })
+      .addCase(fetchUser.fulfilled, (state, action) => {
+        state.user = action.payload;
+        state.loggedIn = true;
+        state.userStatus = "idle";
+      })
+      .addCase(fetchUser.pending, (state) => {
+        state.userStatus = "loading";
+      })
+      .addCase(fetchUser.rejected, (state) => {
+        state.loggedIn = false;
+        state.userStatus = "failed";
       });
   },
 });
@@ -99,6 +129,7 @@ export const auth = createSlice({
 ///
 
 export const getUser = (state: RootState) => state.auth.user;
+export const getUserStatus = (state: RootState) => state.auth.userStatus;
 export const isUserLoggedIn = (state: RootState) => state.auth.loggedIn;
 
 export const authActions = {
@@ -106,5 +137,6 @@ export const authActions = {
   loginUser,
   registerUser,
   logoutUserInternal,
+  fetchUser,
 };
 export default auth.reducer;
