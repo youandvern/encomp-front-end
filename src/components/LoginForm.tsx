@@ -1,5 +1,4 @@
 import { Button, Container, Stack } from "@mui/material";
-import React from "react";
 import { FieldValues, FormContainer, PasswordElement, TextFieldElement } from "react-hook-form-mui";
 import { UserLoginDto } from "../commonTypes/User";
 import { useAppDispatch, useAppSelector } from "../hooks";
@@ -11,7 +10,6 @@ const defaultValues = {
   password: "",
 };
 
-// TODO: hash password
 export default function LogInForm() {
   const dispatch = useAppDispatch();
   const userStatus = useAppSelector(getUserStatus);

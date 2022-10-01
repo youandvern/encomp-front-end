@@ -27,7 +27,7 @@ export default function ErrorManager() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // navigate home if logged out
+  // navigate home when logged out
   useEffect(() => {
     if (userLoggedIn === false) {
       navigate("/");

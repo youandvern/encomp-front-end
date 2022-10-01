@@ -1,4 +1,3 @@
-import React from "react";
 import { createTheme, ThemeProvider, Container } from "@mui/material";
 import "./App.css";
 import HomePage from "./components/Pages/HomePage";
@@ -7,6 +6,8 @@ import { routes } from "./routes";
 import LogInView from "./components/LoginForm";
 import RegisterView from "./components/RegisterForm";
 import ProjectsPage from "./components/Pages/ProjectsPage";
+import LoggedInRoute from "./components/LoggedInRoute";
+import LoggedOutRoute from "./components/LoggedOutRoute";
 
 import ErrorManager from "./components/ErrorManager";
 import ErrorSnackbar from "./components/ErrorSnackbar";
@@ -41,8 +42,14 @@ function App() {
         <Routes>
           <Route path={routes.home.path} element={<HomePage />} />
           <Route path={routes.login.path} element={<LogInView />} />
-          <Route path={routes.register.path} element={<RegisterView />} />
-          <Route path={routes.projects.path} element={<ProjectsPage />} />
+          <Route
+            path={routes.register.path}
+            element={<LoggedOutRoute children={<RegisterView />} />}
+          />
+          <Route
+            path={routes.projects.path}
+            element={<LoggedInRoute children={<ProjectsPage />} />}
+          />
         </Routes>
       </Container>
     </ThemeProvider>

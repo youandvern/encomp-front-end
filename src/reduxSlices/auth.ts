@@ -1,13 +1,13 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../store";
-import { apiRegister, apiLogin, apiGetUser } from "../api";
+import { apiRegister, apiLogin, apiGetUser, apiLogout } from "../api";
 import { errorsActions } from "./errors";
 import User, { UserLoginDto, UserRegisterDto } from "../commonTypes/User";
 import { projectsActions } from "./projects";
 import { StatusT } from "../commonTypes/Status";
-import { stat } from "fs";
 
 export const LOGIN_USER = "LOGIN_USER";
+export const LOGOUT_USER = "LOGOUT_USER";
 export const REGISTER_USER = "REGISTER_USER";
 export const LOGOUT_INTERNAL = "LOGOUT_INTERNAL";
 export const GET_USER = "GET_USER";
@@ -62,6 +62,17 @@ const registerUser = createAsyncThunk(
 const fetchUser = createAsyncThunk(GET_USER, async (_, thunkApi) => {
   try {
     return await apiGetUser();
+  } catch (err) {
+    thunkApi.dispatch(errorsActions.throwError(`${err}`));
+    return thunkApi.rejectWithValue(null);
+  }
+});
+
+const logoutUser = createAsyncThunk(LOGOUT_USER, async (_, thunkApi) => {
+  try {
+    await apiLogout();
+    thunkApi.dispatch(logoutUserInternal());
+    return true;
   } catch (err) {
     thunkApi.dispatch(errorsActions.throwError(`${err}`));
     return thunkApi.rejectWithValue(null);
@@ -136,6 +147,7 @@ export const authActions = {
   ...auth.actions,
   loginUser,
   registerUser,
+  logoutUser,
   logoutUserInternal,
   fetchUser,
 };

@@ -39,7 +39,6 @@ const fetchProjects = createAsyncThunk(GET_PROJECTS, async (_, thunkApi) => {
   }
 });
 
-// TODO: fetch user on app mount, logout if 401
 const createProject = createAsyncThunk(CREATE_PROJECT, async (projectDto: ProjectDto, thunkApi) => {
   try {
     return await apiCreateProject(projectDto);

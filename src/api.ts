@@ -119,3 +119,17 @@ export async function apiGetUser(): Promise<User> {
   const response = await fetch(API_BASE_URL + "auth/user/", { credentials: "include" });
   return await commonApiReturn(response, "Failed to get project");
 }
+
+export async function apiLogout(): Promise<boolean> {
+  const response = await fetch(API_BASE_URL + "auth/logout/", {
+    method: "POST",
+    credentials: "include",
+  });
+
+  if (response.ok) {
+    // Logout returns 204 code with no json body
+    return true;
+  } else {
+    return Promise.reject(rejectMessage(response, "Failed to logout"));
+  }
+}

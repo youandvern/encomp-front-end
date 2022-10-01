@@ -9,22 +9,22 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
-import { routes } from "../routes";
+import { routes, RouteT } from "../routes";
 import { Link } from "react-router-dom";
 import styled from "@emotion/styled";
 import { useAppSelector } from "../hooks";
-import { isUserLoggedIn, getUser } from "../reduxSlices/auth";
+import { isUserLoggedIn } from "../reduxSlices/auth";
+import NavBarUser from "./NavBarUser";
 
 const NavBarLink = styled(Link)({
   textDecoration: "none",
 });
 
-const shouldDisplay = (requiresLogin: boolean, isLoggedIn: boolean) =>
-  !(requiresLogin && !isLoggedIn);
+const shouldDisplay = (route: RouteT, isLoggedIn: boolean) =>
+  (!route.requireLogin || isLoggedIn) && !(route.onlyLoggedOut && isLoggedIn);
 
 // adapted from https://mui.com/material-ui/react-app-bar/
 export default function NavBar() {
-  const user = useAppSelector(getUser);
   const isLoggedIn = useAppSelector(isUserLoggedIn);
 
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
@@ -71,7 +71,7 @@ export default function NavBar() {
               }}
             >
               {Object.values(routes)
-                .filter((route) => shouldDisplay(route.requireLogin, isLoggedIn))
+                .filter((route) => shouldDisplay(route, isLoggedIn))
                 .map((route) => (
                   <MenuItem key={"menu-item-" + route.path} onClick={handleCloseIconMenu}>
                     <Typography textAlign="center">
@@ -84,7 +84,7 @@ export default function NavBar() {
 
           <Box sx={{ flexGrow: 1, display: { xs: "none", sm: "flex" } }}>
             {Object.values(routes)
-              .filter((route) => shouldDisplay(route.requireLogin, isLoggedIn))
+              .filter((route) => shouldDisplay(route, isLoggedIn))
               .map((route) => (
                 <NavBarLink key={"menu-link-" + route.path} to={route.path}>
                   <Button
@@ -96,7 +96,9 @@ export default function NavBar() {
                 </NavBarLink>
               ))}
           </Box>
-          <Box sx={{ flexGrow: 0 }}>{isLoggedIn && user ? user.email : "logged out"}</Box>
+          <Box sx={{ flexGrow: 0 }}>
+            <NavBarUser />
+          </Box>
         </Toolbar>
       </Container>
     </AppBar>
