@@ -30,9 +30,34 @@ export const GLOBAL_THEME = createTheme({
       main: "#faa92f",
     },
   },
+  typography: {
+    h1: {
+      fontSize: "4rem",
+      fontWeight: "500",
+    },
+    h2: {
+      fontSize: "3rem",
+      fontWeight: "600",
+    },
+    h3: {
+      fontSize: "2.25rem",
+      fontWeight: "600",
+    },
+    h4: {
+      fontSize: "1.875rem",
+      fontWeight: "600",
+    },
+    h5: {
+      fontSize: "1.5rem",
+      fontWeight: "700",
+    },
+    h6: {
+      fontSize: "1rem",
+      fontWeight: "700",
+    },
+  },
 });
 
-// TODO: use authorized routes
 function App() {
   return (
     <ThemeProvider theme={GLOBAL_THEME}>
@@ -41,7 +66,7 @@ function App() {
         <ErrorSnackbar />
         <Routes>
           <Route path={routes.home.path} element={<HomePage />} />
-          <Route path={routes.login.path} element={<LogInView />} />
+          <Route path={routes.login.path} element={<LoggedOutRoute children={<LogInView />} />} />
           <Route
             path={routes.register.path}
             element={<LoggedOutRoute children={<RegisterView />} />}

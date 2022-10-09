@@ -1,6 +1,6 @@
-import { Button, Container, Stack } from "@mui/material";
+import { Button, Container, Stack, Typography } from "@mui/material";
 import { FieldValues, FormContainer, PasswordElement, TextFieldElement } from "react-hook-form-mui";
-import { UserLoginDto } from "../commonTypes/User";
+import { UserLoginDto } from "../commonTypes/UserT";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { authActions, getUserStatus } from "../reduxSlices/auth";
 import FormPendingSkeleton from "./FormPendingSkeleton";
@@ -27,7 +27,7 @@ export default function LogInForm() {
         ) : (
           <FormContainer defaultValues={defaultValues} onSuccess={handleSubmit}>
             <Stack spacing={2}>
-              <h1>Log In:</h1>
+              <Typography variant="h3">Log In:</Typography>
               <TextFieldElement required type="email" name="email" label="Email Address" />
               <PasswordElement required name="password" label="Password" />
               <Button fullWidth type="submit" variant="contained">

@@ -1,4 +1,4 @@
-import { Button, Container, Stack } from "@mui/material";
+import { Button, Container, Stack, Typography } from "@mui/material";
 import {
   FieldValues,
   FormContainer,
@@ -6,7 +6,7 @@ import {
   PasswordElement,
   PasswordRepeatElement,
 } from "react-hook-form-mui";
-import { UserRegisterDto } from "../commonTypes/User";
+import { UserRegisterDto } from "../commonTypes/UserT";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { authActions, getUserStatus } from "../reduxSlices/auth";
 import FormPendingSkeleton from "./FormPendingSkeleton";
@@ -33,7 +33,7 @@ export default function RegisterForm() {
       ) : (
         <FormContainer defaultValues={defaultValues} onSuccess={handleSubmit}>
           <Stack spacing={2}>
-            <h1>Register:</h1>
+            <Typography variant="h3">Register:</Typography>
             <TextFieldElement required type="email" name="email" label="Email Address" />
             <PasswordElement required name="password" label="Password" />
             <PasswordRepeatElement

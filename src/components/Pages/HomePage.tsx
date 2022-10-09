@@ -1,3 +1,4 @@
+import { Typography } from "@mui/material";
 import React, { useState } from "react";
 import { useAppDispatch } from "../../hooks";
 import { errorsActions } from "../../reduxSlices/errors";
@@ -13,8 +14,9 @@ export default function HomePage() {
 
   return (
     <>
-      <h1>Welcome Home</h1>
-      <p>Here's some interesting content.</p>
+      <br />
+      <Typography variant="h2">Welcome Home</Typography>
+      <Typography>Here's some interesting content.</Typography>
       <button onClick={signalNewAlert}>Alert</button>
     </>
   );

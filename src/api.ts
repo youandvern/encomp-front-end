@@ -1,6 +1,7 @@
 import Cookies from "js-cookie";
-import ProjectT, { ProjectDto } from "./commonTypes/Project";
-import User, { UserLoginDto, UserRegisterDto } from "./commonTypes/User";
+import CalculationT, { CalculationDto } from "./commonTypes/CalculationT";
+import ProjectT, { ProjectDto } from "./commonTypes/ProjectT";
+import User, { UserLoginDto, UserRegisterDto } from "./commonTypes/UserT";
 
 ///
 /// Switch for production deployment
@@ -41,6 +42,39 @@ async function commonApiReturn(response: Response, failMessage: string) {
     return await response.json();
   } else {
     return Promise.reject(rejectMessage(response, failMessage));
+  }
+}
+
+///
+/// Calculation
+///
+
+export async function apiFetchCalculation(id: number): Promise<CalculationT> {
+  const response = await fetch(`${API_BASE_URL}calculations/${id}/`, { credentials: "include" });
+  return await commonApiReturn(response, "Failed to get calculation");
+}
+
+export async function apiCreateCalculation(calculationDto: CalculationDto): Promise<CalculationT> {
+  const response = await fetch(API_BASE_URL + "calculations/", {
+    method: "POST",
+    body: JSON.stringify(calculationDto),
+    headers: getPostHeadersWithCsrf(),
+    credentials: "include",
+  });
+  return await commonApiReturn(response, `Failed to create calculation ${calculationDto.name}`);
+}
+
+export async function apiDeleteCalculation(id: number): Promise<boolean> {
+  const response = await fetch(`${API_BASE_URL}calculations/${id}/`, {
+    method: "DELETE",
+    credentials: "include",
+  });
+
+  if (response.ok) {
+    // DELETE returns 204 code with no json body
+    return true;
+  } else {
+    return Promise.reject(rejectMessage(response, "Failed to delete calculation"));
   }
 }
 

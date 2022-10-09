@@ -1,17 +1,22 @@
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
 import React, { ChangeEvent, FormEvent, useState } from "react";
-import { useAppDispatch } from "../hooks";
-import { projectsActions } from "../reduxSlices/projects";
+import { CalculationDto } from "../commonTypes/CalculationT";
+import { useAppDispatch, useAppSelector } from "../hooks";
+import { calculationActions } from "../reduxSlices/calculation";
+import { errorsActions } from "../reduxSlices/errors";
+import { getCurrentProject } from "../reduxSlices/projects";
 
 const defaultValues = {
   name: "",
   description: "",
 };
 
-export default function CreateProjectForm() {
+export default function CreateCalculationForm() {
+  const currentProject = useAppSelector(getCurrentProject);
   const dispatch = useAppDispatch();
   const [formValues, setValues] = useState(defaultValues);
+  const projectSelected = currentProject !== null;
 
   const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = event.target;
@@ -20,28 +25,34 @@ export default function CreateProjectForm() {
 
   const handleSubmit = (event: FormEvent<HTMLDivElement>) => {
     event.preventDefault();
-    dispatch(projectsActions.createAndGetProject(formValues));
-    setValues(defaultValues);
+    if (projectSelected) {
+      const calcDto = { ...formValues, projectId: currentProject?.id } as CalculationDto;
+      dispatch(calculationActions.createAndGetCalculation(calcDto));
+      setValues(defaultValues);
+    } else {
+      dispatch(errorsActions.throwError("Could not find project."));
+    }
   };
 
-  return (
+  return projectSelected ? (
     <Container maxWidth="sm">
       <Box component="form" onSubmit={handleSubmit}>
         <Stack spacing={2}>
-          <Typography variant="h3">Create a Project:</Typography>
+          <Typography variant="h3">New Calculation:</Typography>
+          <Typography variant="h6">Project: {currentProject?.name}</Typography>
           <TextField
             required
-            id="project-name"
+            id="calculation-name"
             name="name"
-            label="Project Name"
+            label="Calculation Name"
             value={formValues.name}
             onChange={handleChange}
           />
           <TextField
             multiline
-            id="project-description"
+            id="calculation-description"
             name="description"
-            label="Project Description"
+            label="Calculation Description"
             value={formValues.description}
             onChange={handleChange}
             inputProps={{ maxLength: 500 }}
@@ -52,5 +63,7 @@ export default function CreateProjectForm() {
         </Stack>
       </Box>
     </Container>
+  ) : (
+    <Typography variant="h5">Please select a project.</Typography>
   );
 }

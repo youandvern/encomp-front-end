@@ -2,9 +2,9 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 import { apiRegister, apiLogin, apiGetUser, apiLogout } from "../api";
 import { errorsActions } from "./errors";
-import User, { UserLoginDto, UserRegisterDto } from "../commonTypes/User";
+import User, { UserLoginDto, UserRegisterDto } from "../commonTypes/UserT";
 import { projectsActions } from "./projects";
-import { StatusT } from "../commonTypes/Status";
+import { StatusT } from "../commonTypes/StatusT";
 
 export const LOGIN_USER = "LOGIN_USER";
 export const LOGOUT_USER = "LOGOUT_USER";

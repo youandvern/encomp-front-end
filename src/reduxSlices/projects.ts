@@ -1,7 +1,13 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import {
+  AnyAction,
+  createAsyncThunk,
+  createSlice,
+  PayloadAction,
+  ThunkAction,
+} from "@reduxjs/toolkit";
 import { AppDispatch, RootState } from "../store";
-import ProjectT, { ProjectDto } from "../commonTypes/Project";
-import { StatusT } from "../commonTypes/Status";
+import ProjectT, { ProjectDto } from "../commonTypes/ProjectT";
+import { StatusT } from "../commonTypes/StatusT";
 import { apiCreateProject, apiDeleteProject, apiFetchProjects } from "../api";
 import { errorsActions } from "./errors";
 
@@ -15,13 +21,13 @@ export const DELETE_PROJECT = "DELETE_PROJECT";
 
 export interface ProjectsState {
   allProjects: ProjectT[];
-  currentProject: ProjectT | null;
+  currentProjectId: number | null;
   projectStatus: StatusT;
 }
 
 export const initialState: ProjectsState = {
   allProjects: [],
-  currentProject: null,
+  currentProjectId: null,
   projectStatus: "idle",
 };
 
@@ -55,6 +61,9 @@ const createAndGetProject = (projectDto: ProjectDto) => async (dispatch: AppDisp
 
 const deleteProject = createAsyncThunk(DELETE_PROJECT, async (id: number, thunkApi) => {
   try {
+    const state = thunkApi.getState() as RootState;
+    if (state.projects.currentProjectId === id)
+      thunkApi.dispatch(projectsActions.removeCurrentProject());
     return await apiDeleteProject(id);
   } catch (err) {
     thunkApi.dispatch(errorsActions.throwError(`${err}`));
@@ -79,6 +88,12 @@ export const projects = createSlice({
       state.allProjects = [];
     },
     clearProjectState: () => initialState,
+    removeCurrentProject: (state: ProjectsState) => {
+      state.currentProjectId = null;
+    },
+    setCurrentProject: (state: ProjectsState, action: PayloadAction<number>) => {
+      state.currentProjectId = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -93,7 +108,7 @@ export const projects = createSlice({
         state.projectStatus = "failed";
       })
       .addCase(createProject.fulfilled, (state, action) => {
-        state.currentProject = action.payload;
+        state.currentProjectId = action.payload.id;
         state.projectStatus = "idle";
       })
       .addCase(createProject.pending, (state) => {
@@ -120,6 +135,11 @@ export const projects = createSlice({
 
 export const getProjects = (state: RootState) => state.projects.allProjects;
 export const getProjectsStatus = (state: RootState) => state.projects.projectStatus;
+export const getCurrentProjectId = (state: RootState) => state.projects.currentProjectId;
+export const getCurrentProject = (state: RootState) =>
+  state.projects.currentProjectId === null
+    ? null
+    : state.projects.allProjects.find((project) => project.id === state.projects.currentProjectId);
 
 export const projectsActions = {
   ...projects.actions,
