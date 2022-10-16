@@ -19,10 +19,10 @@ export default function Project({ project }: Props) {
     <Card
       sx={{
         display: "flex",
-        maxWidth: "30em",
+        maxWidth: "30rem",
         backgroundColor: projectSelected ? "secondary.light" : undefined,
-        marginRight: projectSelected ? undefined : "1em",
-        marginTop: "1em",
+        marginRight: projectSelected ? undefined : "1rem",
+        marginTop: "1rem",
       }}
     >
       <CardActionArea onClick={() => dispatch(projectsActions.setCurrentProject(project.id))}>

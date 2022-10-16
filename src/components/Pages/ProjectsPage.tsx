@@ -46,8 +46,8 @@ export default function ProjectsPage() {
         sm={6}
         sx={{
           backgroundColor: currentProject !== null ? "secondary.light" : undefined,
-          padding: "1em",
-          borderRadius: "0.5em",
+          padding: "1rem",
+          borderRadius: "0.5rem",
         }}
       >
         {!projectSelected && <Typography variant="h5">Select a project.</Typography>}
@@ -55,7 +55,7 @@ export default function ProjectsPage() {
           <Typography variant="h5">This project does not have any calculations yet.</Typography>
         )}
 
-        <Stack spacing={2} sx={{ marginTop: "1em" }}>
+        <Stack spacing={2} sx={{ marginTop: "1rem" }}>
           {currentProject?.calculations.map((calculation) => (
             <Calculation key={"calculation-" + calculation.id} calculation={calculation} />
           ))}

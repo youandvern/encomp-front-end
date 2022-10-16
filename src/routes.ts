@@ -35,4 +35,11 @@ export const routes: Record<string, RouteT> = {
     requireLogin: true,
     onlyLoggedOut: false,
   },
+  templates: {
+    display: "Templates",
+    path: "/templates",
+    description: "The templates page",
+    requireLogin: true,
+    onlyLoggedOut: false,
+  },
 };

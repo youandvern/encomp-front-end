@@ -1,6 +1,7 @@
 import Cookies from "js-cookie";
 import CalculationT, { CalculationDto } from "./commonTypes/CalculationT";
 import ProjectT, { ProjectDto } from "./commonTypes/ProjectT";
+import TemplateT, { TemplateDto } from "./commonTypes/TemplateT";
 import User, { UserLoginDto, UserRegisterDto } from "./commonTypes/UserT";
 
 ///
@@ -109,6 +110,49 @@ export async function apiDeleteProject(id: number): Promise<boolean> {
   } else {
     return Promise.reject(rejectMessage(response, "Failed to delete project"));
   }
+}
+
+///
+/// Template
+///
+
+export async function apiFetchTemplates(): Promise<TemplateT[]> {
+  const response = await fetch(API_BASE_URL + "templates/", { credentials: "include" });
+  return await commonApiReturn(response, "Failed to get templates");
+}
+
+export async function apiCreateTemplate(templateDto: TemplateDto): Promise<TemplateT> {
+  const response = await fetch(API_BASE_URL + "templates/", {
+    method: "POST",
+    body: JSON.stringify(templateDto),
+    headers: getPostHeadersWithCsrf(),
+    credentials: "include",
+  });
+  return await commonApiReturn(response, `Failed to create template ${templateDto.name}`);
+}
+
+export async function apiDeleteTemplate(id: number): Promise<boolean> {
+  const response = await fetch(`${API_BASE_URL}templates/${id}/`, {
+    method: "DELETE",
+    credentials: "include",
+  });
+
+  if (response.ok) {
+    // DELETE returns 204 code with no json body
+    return true;
+  } else {
+    return Promise.reject(rejectMessage(response, "Failed to delete template"));
+  }
+}
+
+export async function apiUpdateTemplate(template: TemplateT): Promise<TemplateT> {
+  const response = await fetch(`${API_BASE_URL}templates/${template.id}/`, {
+    method: "PATCH",
+    body: JSON.stringify(template),
+    headers: getPostHeadersWithCsrf(),
+    credentials: "include",
+  });
+  return await commonApiReturn(response, `Failed to update template ${template.name}`);
 }
 
 ///

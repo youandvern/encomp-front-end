@@ -22,9 +22,9 @@ export default function Calculation({ calculation }: Props) {
     <Card
       sx={{
         display: "flex",
-        maxWidth: "30em",
+        maxWidth: "30rem",
         borderColor: calculationSelected ? "primary.light" : undefined,
-        borderWidth: calculationSelected ? "0.1em" : undefined,
+        borderWidth: calculationSelected ? "0.1rem" : undefined,
         borderStyle: calculationSelected ? "solid" : undefined,
       }}
     >

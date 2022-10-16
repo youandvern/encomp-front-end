@@ -52,7 +52,7 @@ export default function NumSlider({
             width: "fit-content",
             border: "1px solid",
             borderRadius: 2,
-            padding: "0.5em",
+            padding: "0.5rem",
           }}
         >
           {value}
