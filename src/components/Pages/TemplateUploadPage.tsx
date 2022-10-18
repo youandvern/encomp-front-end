@@ -2,7 +2,7 @@ import { Stack } from "@mui/material";
 import React, { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { getTemplates, templatesActions } from "../../reduxSlices/template";
-import CreateTemplateForm from "../CreateTemplateForm";
+import CreateTemplateForm from "../Forms/CreateTemplateForm";
 import Template from "../Template";
 
 export default function TemplateUploadPage() {

@@ -5,28 +5,44 @@ import {
   DialogContentText,
   DialogActions,
   Button,
+  IconButton,
   Typography,
 } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { useState } from "react";
 
 interface Props {
-  open: boolean;
   objectType: string;
   objectName: string;
-  onConfirmDelete: React.MouseEventHandler<HTMLButtonElement>;
-  handleClose?: React.MouseEventHandler<HTMLButtonElement>;
+  onConfirmDelete: () => void;
+  additionalMessage?: string;
 }
 
-export default function DeleteAlert({
-  open,
+export default function DeleteAlertButton({
   onConfirmDelete,
   objectName,
   objectType,
-  handleClose,
+  additionalMessage,
 }: Props) {
+  const [openDeleteAlert, setOpenDeleteAlert] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpenDeleteAlert(true);
+  };
+
+  const handleConfirmDelete = () => {
+    onConfirmDelete();
+    handleClose();
+  };
+
+  const handleClose = () => {
+    setOpenDeleteAlert(false);
+  };
+
   return (
     <>
       <Dialog
-        open={open}
+        open={openDeleteAlert}
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
@@ -41,15 +57,19 @@ export default function DeleteAlert({
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             Deleting this {objectType} cannot be undone.
+            {additionalMessage && " " + additionalMessage}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button variant="outlined" color="warning" onClick={onConfirmDelete} autoFocus>
+          <Button variant="outlined" color="warning" onClick={handleConfirmDelete} autoFocus>
             Delete
           </Button>
         </DialogActions>
       </Dialog>
+      <IconButton onClick={handleClickOpen}>
+        <DeleteIcon />
+      </IconButton>
     </>
   );
 }

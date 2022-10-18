@@ -8,12 +8,13 @@ import {
 import { AppDispatch, RootState } from "../store";
 import ProjectT, { ProjectDto } from "../commonTypes/ProjectT";
 import { StatusT } from "../commonTypes/StatusT";
-import { apiCreateProject, apiDeleteProject, apiFetchProjects } from "../api";
+import { apiCreateProject, apiDeleteProject, apiFetchProjects, apiUpdateProject } from "../api";
 import { errorsActions } from "./errors";
 
 export const GET_PROJECTS = "GET_PROJECTS";
 export const CREATE_PROJECT = "CREATE_PROJECT";
 export const DELETE_PROJECT = "DELETE_PROJECT";
+export const UPDATE_PROJECT = "UPDATE_PROJECT";
 
 ///
 /// State
@@ -76,6 +77,20 @@ const deleteAndGetProject = (id: number) => async (dispatch: AppDispatch) => {
   return await dispatch(fetchProjects());
 };
 
+const updateProject = createAsyncThunk(UPDATE_PROJECT, async (project: ProjectT, thunkApi) => {
+  try {
+    return await apiUpdateProject(project);
+  } catch (err) {
+    thunkApi.dispatch(errorsActions.throwError(`${err}`));
+    return thunkApi.rejectWithValue(null);
+  }
+});
+
+const updateAndGetProject = (project: ProjectT) => async (dispatch: AppDispatch) => {
+  await dispatch(updateProject(project));
+  return await dispatch(projectsActions.fetchProjects());
+};
+
 ///
 /// Slice
 ///
@@ -125,6 +140,15 @@ export const projects = createSlice({
       })
       .addCase(deleteProject.rejected, (state) => {
         state.projectStatus = "failed";
+      })
+      .addCase(updateProject.fulfilled, (state, action) => {
+        state.projectStatus = "idle";
+      })
+      .addCase(updateProject.pending, (state) => {
+        state.projectStatus = "loading";
+      })
+      .addCase(updateProject.rejected, (state) => {
+        state.projectStatus = "failed";
       });
   },
 });
@@ -146,5 +170,6 @@ export const projectsActions = {
   fetchProjects,
   createAndGetProject,
   deleteAndGetProject,
+  updateAndGetProject,
 };
 export default projects.reducer;

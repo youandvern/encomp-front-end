@@ -1,8 +1,8 @@
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
 import React, { ChangeEvent, FormEvent, useState } from "react";
-import { useAppDispatch } from "../hooks";
-import { projectsActions } from "../reduxSlices/projects";
+import { useAppDispatch } from "../../hooks";
+import { projectsActions } from "../../reduxSlices/projects";
 
 const defaultValues = {
   name: "",

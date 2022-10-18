@@ -1,11 +1,11 @@
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
 import React, { ChangeEvent, FormEvent, useState } from "react";
-import { CalculationDto } from "../commonTypes/CalculationT";
-import { useAppDispatch, useAppSelector } from "../hooks";
-import { calculationActions } from "../reduxSlices/calculation";
-import { errorsActions } from "../reduxSlices/errors";
-import { getCurrentProject } from "../reduxSlices/projects";
+import { CalculationDto } from "../../commonTypes/CalculationT";
+import { useAppDispatch, useAppSelector } from "../../hooks";
+import { calculationActions } from "../../reduxSlices/calculation";
+import { errorsActions } from "../../reduxSlices/errors";
+import { getCurrentProject } from "../../reduxSlices/projects";
 
 const defaultValues = {
   name: "",

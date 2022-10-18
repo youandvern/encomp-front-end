@@ -1,13 +1,14 @@
 import React from "react";
-import ProjectT from "../commonTypes/ProjectT";
 import { useAppDispatch, useAppSelector } from "../hooks";
-import { getCurrentProjectId, projectsActions } from "../reduxSlices/projects";
+import { getCurrentProjectId } from "../reduxSlices/projects";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import { Button, CardActionArea, CardActions } from "@mui/material";
+import { CardActionArea, CardActions, Stack } from "@mui/material";
 import { CalculationForProjectT } from "../commonTypes/CalculationT";
 import { calculationActions, getCurrentCalculation } from "../reduxSlices/calculation";
+import DeleteAlertButton from "./DeleteAlertButton";
+import UpdateFormButton from "./UpdateFormButton";
 
 interface Props {
   calculation: CalculationForProjectT;
@@ -52,13 +53,16 @@ export default function Calculation({ calculation }: Props) {
         </CardContent>
       </CardActionArea>
       <CardActions>
-        <Button
-          color="primary"
-          onClick={() => dispatch(calculationActions.deleteAndGetCalculation(calculation.id))}
-          sx={{ height: "100%" }}
-        >
-          Delete
-        </Button>
+        <Stack direction="row">
+          <UpdateFormButton formTitle="Edit calculation information" calculation={calculation} />
+          <DeleteAlertButton
+            objectType="calculation"
+            objectName={calculation.name}
+            onConfirmDelete={() => {
+              dispatch(calculationActions.deleteAndGetCalculation(calculation.id));
+            }}
+          />
+        </Stack>
       </CardActions>
     </Card>
   );

@@ -1,5 +1,5 @@
 import Cookies from "js-cookie";
-import CalculationT, { CalculationDto } from "./commonTypes/CalculationT";
+import CalculationT, { CalculationDto, CalculationForProjectT } from "./commonTypes/CalculationT";
 import ProjectT, { ProjectDto } from "./commonTypes/ProjectT";
 import TemplateT, { TemplateDto } from "./commonTypes/TemplateT";
 import User, { UserLoginDto, UserRegisterDto } from "./commonTypes/UserT";
@@ -79,6 +79,18 @@ export async function apiDeleteCalculation(id: number): Promise<boolean> {
   }
 }
 
+export async function apiUpdateCalculation(
+  calculation: CalculationForProjectT
+): Promise<CalculationForProjectT> {
+  const response = await fetch(`${API_BASE_URL}calculations/${calculation.id}/`, {
+    method: "PATCH",
+    body: JSON.stringify(calculation),
+    headers: getPostHeadersWithCsrf(),
+    credentials: "include",
+  });
+  return await commonApiReturn(response, `Failed to update project ${calculation.name}`);
+}
+
 ///
 /// Projects
 ///
@@ -110,6 +122,16 @@ export async function apiDeleteProject(id: number): Promise<boolean> {
   } else {
     return Promise.reject(rejectMessage(response, "Failed to delete project"));
   }
+}
+
+export async function apiUpdateProject(project: ProjectT): Promise<ProjectT> {
+  const response = await fetch(`${API_BASE_URL}projects/${project.id}/`, {
+    method: "PATCH",
+    body: JSON.stringify(project),
+    headers: getPostHeadersWithCsrf(),
+    credentials: "include",
+  });
+  return await commonApiReturn(response, `Failed to update project ${project.name}`);
 }
 
 ///

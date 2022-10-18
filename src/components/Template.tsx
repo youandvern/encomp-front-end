@@ -1,13 +1,13 @@
 import React from "react";
 import { useAppDispatch } from "../hooks";
-import { projectsActions } from "../reduxSlices/projects";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import { Button, CardActionArea, CardActions } from "@mui/material";
+import { CardActionArea, CardActions, Stack } from "@mui/material";
 import TemplateT from "../commonTypes/TemplateT";
-import DeleteAlert from "./DeleteAlert";
+import DeleteAlertButton from "./DeleteAlertButton";
 import { templatesActions } from "../reduxSlices/template";
+import UpdateFormButton from "./UpdateFormButton";
 
 interface Props {
   template: TemplateT;
@@ -15,22 +15,9 @@ interface Props {
 
 export default function Template({ template }: Props) {
   const dispatch = useAppDispatch();
-  const [openDeleteAlert, setOpenDeleteAlert] = React.useState(false);
 
-  const handleClickOpen = () => {
-    setOpenDeleteAlert(true);
-  };
-
-  const handleConfirmDelete = () => {
-    dispatch(templatesActions.deleteAndGetTemplate(template.id));
-    handleClose();
-  };
-
-  const handleClose = () => {
-    setOpenDeleteAlert(false);
-  };
-
-  // TODO: edit template info with button; Download/display
+  // TODO: Download/display template file data
+  // TODO: choose template when creating project
   return (
     <Card
       sx={{
@@ -48,16 +35,16 @@ export default function Template({ template }: Props) {
         </CardContent>
       </CardActionArea>
       <CardActions>
-        <DeleteAlert
-          open={openDeleteAlert}
-          objectType="template"
-          objectName={template.name}
-          onConfirmDelete={handleConfirmDelete}
-          handleClose={handleClose}
-        />
-        <Button color="primary" onClick={handleClickOpen} sx={{ height: "100%" }}>
-          Delete
-        </Button>
+        <Stack direction="row">
+          <UpdateFormButton formTitle="Edit template information" template={template} />
+          <DeleteAlertButton
+            objectType="template"
+            objectName={template.name}
+            onConfirmDelete={() => {
+              dispatch(templatesActions.deleteAndGetTemplate(template.id));
+            }}
+          />
+        </Stack>
       </CardActions>
     </Card>
   );

@@ -2,9 +2,9 @@ import React, { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import Project from "../Project";
 import { getCurrentProject, getProjects, projectsActions } from "../../reduxSlices/projects";
-import CreateProjectForm from "../CreateProjectForm";
+import CreateProjectForm from "../Forms/CreateProjectForm";
 import { Stack, Grid, Typography } from "@mui/material";
-import CreateCalculationForm from "../CreateCalculationForm";
+import CreateCalculationForm from "../Forms/CreateCalculationForm";
 import Calculation from "../CalculationForProject";
 
 export default function ProjectsPage() {

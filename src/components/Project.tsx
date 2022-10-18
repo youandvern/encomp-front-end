@@ -5,7 +5,9 @@ import { getCurrentProjectId, projectsActions } from "../reduxSlices/projects";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
-import { Button, CardActionArea, CardActions } from "@mui/material";
+import { CardActionArea, CardActions, Stack } from "@mui/material";
+import DeleteAlertButton from "./DeleteAlertButton";
+import UpdateFormButton from "./UpdateFormButton";
 
 interface Props {
   project: ProjectT;
@@ -34,13 +36,17 @@ export default function Project({ project }: Props) {
         </CardContent>
       </CardActionArea>
       <CardActions>
-        <Button
-          color="primary"
-          onClick={() => dispatch(projectsActions.deleteAndGetProject(project.id))}
-          sx={{ height: "100%" }}
-        >
-          Delete
-        </Button>
+        <Stack direction="row">
+          <UpdateFormButton formTitle="Edit project information" project={project} />
+          <DeleteAlertButton
+            objectType="project"
+            objectName={project.name}
+            onConfirmDelete={() => {
+              dispatch(projectsActions.deleteAndGetProject(project.id));
+            }}
+            additionalMessage="Deleting a project will also delete any calculations associated with it."
+          />
+        </Stack>
       </CardActions>
     </Card>
   );

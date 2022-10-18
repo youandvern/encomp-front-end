@@ -1,14 +1,20 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AppDispatch, RootState } from "../store";
 import { StatusT } from "../commonTypes/StatusT";
-import { apiCreateCalculation, apiDeleteCalculation, apiFetchCalculation } from "../api";
+import {
+  apiCreateCalculation,
+  apiDeleteCalculation,
+  apiFetchCalculation,
+  apiUpdateCalculation,
+} from "../api";
 import { errorsActions } from "./errors";
-import CalculationT, { CalculationDto } from "../commonTypes/CalculationT";
+import CalculationT, { CalculationDto, CalculationForProjectT } from "../commonTypes/CalculationT";
 import { projectsActions } from "./projects";
 
 export const GET_CALCULATION = "GET_CALCULATION";
 export const CREATE_CALCULATION = "CREATE_CALCULATION";
 export const DELETE_CALCULATION = "DELETE_CALCULATION";
+export const UPDATE_CALCULATION = "UPDATE_CALCULATION";
 
 ///
 /// State
@@ -73,6 +79,24 @@ const deleteAndGetCalculation = (id: number) => async (dispatch: AppDispatch) =>
   return await dispatch(projectsActions.fetchProjects());
 };
 
+const updateCalculation = createAsyncThunk(
+  UPDATE_CALCULATION,
+  async (calculation: CalculationForProjectT, thunkApi) => {
+    try {
+      return await apiUpdateCalculation(calculation);
+    } catch (err) {
+      thunkApi.dispatch(errorsActions.throwError(`${err}`));
+      return thunkApi.rejectWithValue(null);
+    }
+  }
+);
+
+const updateAndGetCalculation =
+  (calculation: CalculationForProjectT) => async (dispatch: AppDispatch) => {
+    await dispatch(updateCalculation(calculation));
+    return await dispatch(projectsActions.fetchProjects());
+  };
+
 ///
 /// Slice
 ///
@@ -117,6 +141,15 @@ export const calculation = createSlice({
       })
       .addCase(deleteCalculation.rejected, (state) => {
         state.calculationStatus = "failed";
+      })
+      .addCase(updateCalculation.fulfilled, (state, action) => {
+        state.calculationStatus = "idle";
+      })
+      .addCase(updateCalculation.pending, (state) => {
+        state.calculationStatus = "loading";
+      })
+      .addCase(updateCalculation.rejected, (state) => {
+        state.calculationStatus = "failed";
       });
   },
 });
@@ -133,5 +166,6 @@ export const calculationActions = {
   fetchCalculation,
   createAndGetCalculation,
   deleteAndGetCalculation,
+  updateAndGetCalculation,
 };
 export default calculation.reducer;
