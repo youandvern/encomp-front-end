@@ -6,6 +6,7 @@ import CreateProjectForm from "../Forms/CreateProjectForm";
 import { Stack, Grid, Typography } from "@mui/material";
 import CreateCalculationForm from "../Forms/CreateCalculationForm";
 import Calculation from "../CalculationForProject";
+import { templatesActions } from "../../reduxSlices/template";
 
 export default function ProjectsPage() {
   const projects = useAppSelector(getProjects);
@@ -17,6 +18,7 @@ export default function ProjectsPage() {
 
   useEffect(() => {
     dispatch(projectsActions.fetchProjects());
+    dispatch(templatesActions.fetchTemplates());
   }, []);
 
   return (

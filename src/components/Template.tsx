@@ -17,7 +17,6 @@ export default function Template({ template }: Props) {
   const dispatch = useAppDispatch();
 
   // TODO: Download/display template file data
-  // TODO: choose template when creating project
   return (
     <Card
       sx={{
@@ -43,6 +42,7 @@ export default function Template({ template }: Props) {
             onConfirmDelete={() => {
               dispatch(templatesActions.deleteAndGetTemplate(template.id));
             }}
+            additionalMessage="Deleting this template will also delete all calculations that use this template."
           />
         </Stack>
       </CardActions>
