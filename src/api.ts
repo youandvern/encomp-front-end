@@ -29,6 +29,13 @@ function getPostHeadersWithCsrf() {
   return requestHeaders;
 }
 
+function getDeleteHeadersWithCsrf() {
+  const requestHeaders: HeadersInit = new Headers();
+  const csrfCookie = Cookies.get("csrftoken");
+  requestHeaders.set("X-CSRFTOKEN", csrfCookie ? csrfCookie : "not found");
+  return requestHeaders;
+}
+
 function rejectMessage(response: Response, message: string) {
   switch (response.status) {
     case 401:
@@ -69,6 +76,7 @@ export async function apiDeleteCalculation(id: number): Promise<boolean> {
   const response = await fetch(`${API_BASE_URL}calculations/${id}/`, {
     method: "DELETE",
     credentials: "include",
+    headers: getDeleteHeadersWithCsrf(),
   });
 
   if (response.ok) {
@@ -114,6 +122,7 @@ export async function apiDeleteProject(id: number): Promise<boolean> {
   const response = await fetch(`${API_BASE_URL}projects/${id}/`, {
     method: "DELETE",
     credentials: "include",
+    headers: getDeleteHeadersWithCsrf(),
   });
 
   if (response.ok) {
@@ -157,6 +166,7 @@ export async function apiDeleteTemplate(id: number): Promise<boolean> {
   const response = await fetch(`${API_BASE_URL}templates/${id}/`, {
     method: "DELETE",
     credentials: "include",
+    headers: getDeleteHeadersWithCsrf(),
   });
 
   if (response.ok) {
