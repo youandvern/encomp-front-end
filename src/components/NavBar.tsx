@@ -15,17 +15,29 @@ import styled from "@emotion/styled";
 import { useAppSelector } from "../hooks";
 import { isUserLoggedIn } from "../reduxSlices/auth";
 import NavBarUser from "./NavBarUser";
+import { getCurrentTemplateId } from "../reduxSlices/template";
 
 const NavBarLink = styled(Link)({
   textDecoration: "none",
 });
 
-const shouldDisplay = (route: RouteT, isLoggedIn: boolean) =>
-  (!route.requireLogin || isLoggedIn) && !(route.onlyLoggedOut && isLoggedIn);
+const shouldDisplay = (
+  route: RouteT,
+  isLoggedIn: boolean,
+  isTemplateSelected: boolean
+): boolean => {
+  if (route.requireLogin && !isLoggedIn) return false;
+  if (route.onlyLoggedOut && isLoggedIn) return false;
+  if (route.requireSelectedTemplate && !isTemplateSelected) return false;
+  return true;
+};
+// (!route.requireLogin || isLoggedIn) && !(route.onlyLoggedOut && isLoggedIn);
 
 // adapted from https://mui.com/material-ui/react-app-bar/
 export default function NavBar() {
   const isLoggedIn = useAppSelector(isUserLoggedIn);
+  const currentTemplateId = useAppSelector(getCurrentTemplateId);
+  const isTemplateSelected = currentTemplateId != null;
 
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
 
@@ -71,7 +83,7 @@ export default function NavBar() {
               }}
             >
               {Object.values(routes)
-                .filter((route) => shouldDisplay(route, isLoggedIn))
+                .filter((route) => shouldDisplay(route, isLoggedIn, isTemplateSelected))
                 .map((route) => (
                   <MenuItem key={"menu-item-" + route.path} onClick={handleCloseIconMenu}>
                     <Typography textAlign="center">
@@ -84,7 +96,7 @@ export default function NavBar() {
 
           <Box sx={{ flexGrow: 1, display: { xs: "none", sm: "flex" } }}>
             {Object.values(routes)
-              .filter((route) => shouldDisplay(route, isLoggedIn))
+              .filter((route) => shouldDisplay(route, isLoggedIn, isTemplateSelected))
               .map((route) => (
                 <NavBarLink key={"menu-link-" + route.path} to={route.path}>
                   <Button

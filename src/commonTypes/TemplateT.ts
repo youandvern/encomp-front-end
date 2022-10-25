@@ -16,3 +16,8 @@ export interface TemplateDto {
   description?: string;
   fileContent: string;
 }
+
+export interface TemplateContentDto {
+  id: number;
+  content: string;
+}

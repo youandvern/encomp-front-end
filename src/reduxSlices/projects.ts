@@ -164,6 +164,8 @@ export const getCurrentProject = (state: RootState) =>
   state.projects.currentProjectId === null
     ? null
     : state.projects.allProjects.find((project) => project.id === state.projects.currentProjectId);
+export const getProject = (state: RootState, id: number) =>
+  state.projects.allProjects.find((project) => project.id === id);
 
 export const projectsActions = {
   ...projects.actions,

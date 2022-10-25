@@ -8,6 +8,8 @@ import TemplateT from "../commonTypes/TemplateT";
 import DeleteAlertButton from "./DeleteAlertButton";
 import { templatesActions } from "../reduxSlices/template";
 import UpdateFormButton from "./UpdateFormButton";
+import { useNavigate } from "react-router-dom";
+import { routes } from "../routes";
 
 interface Props {
   template: TemplateT;
@@ -15,8 +17,15 @@ interface Props {
 
 export default function Template({ template }: Props) {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
-  // TODO: Download/display template file data
+  const handleClick = () => {
+    dispatch(templatesActions.setCurrentTemplate(template.id));
+    navigate(routes.templateContent.path);
+  };
+
+  // TODO: calculation design and results form
+  // TODO: calculation reports
   return (
     <Card
       sx={{
@@ -25,7 +34,7 @@ export default function Template({ template }: Props) {
         minWidth: "20rem",
       }}
     >
-      <CardActionArea onClick={() => {}}>
+      <CardActionArea onClick={handleClick}>
         <CardContent>
           <Typography variant="h6">{template.name}</Typography>
           <Typography variant="body2" color="text.secondary">

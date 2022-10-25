@@ -5,6 +5,8 @@ import { errorsActions } from "./errors";
 import User, { UserLoginDto, UserRegisterDto } from "../commonTypes/UserT";
 import { projectsActions } from "./projects";
 import { StatusT } from "../commonTypes/StatusT";
+import { templatesActions } from "./template";
+import { calculationActions } from "./calculation";
 
 export const LOGIN_USER = "LOGIN_USER";
 export const LOGOUT_USER = "LOGOUT_USER";
@@ -26,10 +28,10 @@ export interface AuthState {
 
 export const initialState: AuthState = {
   user: null,
-  loggedIn: false,
+  loggedIn: true,
   firstName: null,
   surName: null,
-  userStatus: "idle",
+  userStatus: "loading",
 };
 
 ///
@@ -79,9 +81,12 @@ const logoutUser = createAsyncThunk(LOGOUT_USER, async (_, thunkApi) => {
   }
 });
 
-const logoutUserInternal = createAsyncThunk(LOGOUT_INTERNAL, (_, thunkApi) => {
+const logoutUserInternal = createAsyncThunk(LOGOUT_INTERNAL, async (_, thunkApi) => {
+  await thunkApi.dispatch(authActions.clearAuthState());
   thunkApi.dispatch(authActions.setLoggedOut());
   thunkApi.dispatch(projectsActions.clearProjectState());
+  thunkApi.dispatch(templatesActions.clearTemplatesState());
+  thunkApi.dispatch(calculationActions.clearCalculationState());
 });
 
 ///
@@ -92,7 +97,10 @@ export const auth = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    setLoggedOut: () => initialState,
+    clearAuthState: () => initialState,
+    setLoggedOut: (state) => {
+      state.loggedIn = false;
+    },
   },
   extraReducers: (builder) => {
     builder

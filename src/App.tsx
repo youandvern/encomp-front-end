@@ -12,6 +12,8 @@ import LoggedOutRoute from "./components/LoggedOutRoute";
 import ErrorManager from "./components/ErrorManager";
 import ErrorSnackbar from "./components/ErrorSnackbar";
 import TemplateUploadPage from "./components/Pages/TemplateUploadPage";
+import TemplateContentPage from "./components/Pages/TemplateContentPage";
+import TemplateSelectedRoute from "./components/TemplateSelectedRoute";
 
 export const GLOBAL_THEME = createTheme({
   breakpoints: {
@@ -80,6 +82,10 @@ function App() {
           <Route
             path={routes.templates.path}
             element={<LoggedInRoute children={<TemplateUploadPage />} />}
+          />
+          <Route
+            path={routes.templateContent.path}
+            element={<TemplateSelectedRoute children={<TemplateContentPage />} />}
           />
         </Routes>
       </Container>

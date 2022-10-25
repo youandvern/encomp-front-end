@@ -4,6 +4,7 @@ export interface RouteT {
   description: string;
   requireLogin: boolean;
   onlyLoggedOut: boolean;
+  requireSelectedTemplate?: boolean;
 }
 
 export const routes: Record<string, RouteT> = {
@@ -41,5 +42,13 @@ export const routes: Record<string, RouteT> = {
     description: "The templates page",
     requireLogin: true,
     onlyLoggedOut: false,
+  },
+  templateContent: {
+    display: "Template Editor",
+    path: "/template-content",
+    description: "The template content editor page",
+    requireLogin: true,
+    onlyLoggedOut: false,
+    requireSelectedTemplate: true,
   },
 };

@@ -1,7 +1,7 @@
 import Cookies from "js-cookie";
 import CalculationT, { CalculationDto, CalculationForProjectT } from "./commonTypes/CalculationT";
 import ProjectT, { ProjectDto } from "./commonTypes/ProjectT";
-import TemplateT, { TemplateDto } from "./commonTypes/TemplateT";
+import TemplateT, { TemplateContentDto, TemplateDto } from "./commonTypes/TemplateT";
 import User, { UserLoginDto, UserRegisterDto } from "./commonTypes/UserT";
 
 ///
@@ -150,6 +150,23 @@ export async function apiUpdateProject(project: ProjectT): Promise<ProjectT> {
 export async function apiFetchTemplates(): Promise<TemplateT[]> {
   const response = await fetch(API_BASE_URL + "templates/", { credentials: "include" });
   return await commonApiReturn(response, "Failed to get templates");
+}
+
+export async function apiFetchTemplateContent(id: number): Promise<string> {
+  const response = await fetch(`${API_BASE_URL}templates/${id}/content/`, {
+    credentials: "include",
+  });
+  return await commonApiReturn(response, "Failed to get template content");
+}
+
+export async function apiUpdateTemplateContent(updateDto: TemplateContentDto): Promise<string> {
+  const response = await fetch(`${API_BASE_URL}templates/${updateDto.id}/content/`, {
+    method: "PATCH",
+    body: JSON.stringify(updateDto),
+    headers: getPostHeadersWithCsrf(),
+    credentials: "include",
+  });
+  return await commonApiReturn(response, "Failed to update template content");
 }
 
 export async function apiCreateTemplate(templateDto: TemplateDto): Promise<TemplateT> {
