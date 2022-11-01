@@ -9,6 +9,7 @@ import { CalculationForProjectT } from "../commonTypes/CalculationT";
 import { calculationActions, getCurrentCalculation } from "../reduxSlices/calculation";
 import DeleteAlertButton from "./DeleteAlertButton";
 import UpdateFormButton from "./UpdateFormButton";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   calculation: CalculationForProjectT;
@@ -18,6 +19,14 @@ export default function Calculation({ calculation }: Props) {
   const calculationSelected = useAppSelector(getCurrentCalculation)?.id === calculation.id;
   const projectSelected = useAppSelector(getCurrentProjectId) || 0;
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  const handleSelect = () => {
+    dispatch(
+      calculationActions.setCurrentCalculation({ ...calculation, projectId: projectSelected })
+    );
+    dispatch(calculationActions.getCalculationItems(calculation.id));
+  };
 
   return (
     <Card
@@ -29,13 +38,7 @@ export default function Calculation({ calculation }: Props) {
         borderStyle: calculationSelected ? "solid" : undefined,
       }}
     >
-      <CardActionArea
-        onClick={() =>
-          dispatch(
-            calculationActions.setCurrentCalculation({ ...calculation, projectId: projectSelected })
-          )
-        }
-      >
+      <CardActionArea onClick={handleSelect}>
         <CardContent>
           <Typography
             variant="h6"

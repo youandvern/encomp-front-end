@@ -23,6 +23,7 @@ export interface AuthState {
   loggedIn: boolean;
   firstName: string | null;
   surName: string | null;
+  authStatus: StatusT;
   userStatus: StatusT;
 }
 
@@ -31,6 +32,7 @@ export const initialState: AuthState = {
   loggedIn: true,
   firstName: null,
   surName: null,
+  authStatus: "idle",
   userStatus: "loading",
 };
 
@@ -107,25 +109,31 @@ export const auth = createSlice({
       .addCase(loginUser.fulfilled, (state, action) => {
         state.user = action.payload;
         state.userStatus = "idle";
+        state.authStatus = "idle";
         state.loggedIn = true;
       })
       .addCase(loginUser.pending, (state) => {
+        state.authStatus = "loading";
         state.userStatus = "loading";
       })
       .addCase(loginUser.rejected, (state) => {
         state.loggedIn = false;
+        state.authStatus = "failed";
         state.userStatus = "failed";
       })
       .addCase(registerUser.pending, (state) => {
+        state.authStatus = "loading";
         state.userStatus = "loading";
       })
       .addCase(registerUser.fulfilled, (state, action) => {
         state.user = action.payload;
+        state.authStatus = "idle";
         state.userStatus = "idle";
         state.loggedIn = true;
       })
       .addCase(registerUser.rejected, (state) => {
         state.loggedIn = false;
+        state.authStatus = "failed";
         state.userStatus = "failed";
       })
       .addCase(fetchUser.fulfilled, (state, action) => {
@@ -148,6 +156,7 @@ export const auth = createSlice({
 ///
 
 export const getUser = (state: RootState) => state.auth.user;
+export const getAuthStatus = (state: RootState) => state.auth.authStatus;
 export const getUserStatus = (state: RootState) => state.auth.userStatus;
 export const isUserLoggedIn = (state: RootState) => state.auth.loggedIn;
 

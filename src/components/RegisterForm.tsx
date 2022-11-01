@@ -8,7 +8,7 @@ import {
 } from "react-hook-form-mui";
 import { UserRegisterDto } from "../commonTypes/UserT";
 import { useAppDispatch, useAppSelector } from "../hooks";
-import { authActions, getUserStatus } from "../reduxSlices/auth";
+import { authActions, getAuthStatus } from "../reduxSlices/auth";
 import FormPendingSkeleton from "./FormPendingSkeleton";
 
 const defaultValues = {
@@ -19,7 +19,7 @@ const defaultValues = {
 
 export default function RegisterForm() {
   const dispatch = useAppDispatch();
-  const userStatus = useAppSelector(getUserStatus);
+  const authStatus = useAppSelector(getAuthStatus);
 
   const handleSubmit = (data: FieldValues) => {
     const registerUserDto = data as UserRegisterDto;
@@ -28,7 +28,7 @@ export default function RegisterForm() {
 
   return (
     <Container maxWidth="sm">
-      {userStatus === "loading" ? (
+      {authStatus === "loading" ? (
         <FormPendingSkeleton />
       ) : (
         <FormContainer defaultValues={defaultValues} onSuccess={handleSubmit}>

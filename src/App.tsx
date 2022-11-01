@@ -14,6 +14,8 @@ import ErrorSnackbar from "./components/ErrorSnackbar";
 import TemplateUploadPage from "./components/Pages/TemplateUploadPage";
 import TemplateContentPage from "./components/Pages/TemplateContentPage";
 import TemplateSelectedRoute from "./components/TemplateSelectedRoute";
+import CalculationRunRequiredRoute from "./components/CalculationRunRequiredRoute";
+import CalculationDesignPage from "./components/Pages/CalculationDesignPage";
 
 export const GLOBAL_THEME = createTheme({
   breakpoints: {
@@ -28,6 +30,7 @@ export const GLOBAL_THEME = createTheme({
   palette: {
     primary: {
       main: "#004aad",
+      light: "#b3d4ff",
     },
     secondary: {
       main: "#faa92f",
@@ -65,7 +68,7 @@ export const GLOBAL_THEME = createTheme({
 function App() {
   return (
     <ThemeProvider theme={GLOBAL_THEME}>
-      <Container maxWidth="md">
+      <Container maxWidth="xl">
         <ErrorManager />
         <ErrorSnackbar />
         <Routes>
@@ -86,6 +89,10 @@ function App() {
           <Route
             path={routes.templateContent.path}
             element={<TemplateSelectedRoute children={<TemplateContentPage />} />}
+          />
+          <Route
+            path={routes.calculation.path}
+            element={<CalculationRunRequiredRoute children={<CalculationDesignPage />} />}
           />
         </Routes>
       </Container>

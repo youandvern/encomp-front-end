@@ -5,29 +5,42 @@ import {
   apiCreateCalculation,
   apiDeleteCalculation,
   apiFetchCalculation,
+  apiRunCalculation,
   apiUpdateCalculation,
 } from "../api";
 import { errorsActions } from "./errors";
-import CalculationT, { CalculationDto, CalculationForProjectT } from "../commonTypes/CalculationT";
+import CalculationT, {
+  CalculationDto,
+  CalculationForProjectT,
+  CalculationRunDto,
+  CalculationRunResponse,
+} from "../commonTypes/CalculationT";
 import { projectsActions } from "./projects";
 
 export const GET_CALCULATION = "GET_CALCULATION";
 export const CREATE_CALCULATION = "CREATE_CALCULATION";
 export const DELETE_CALCULATION = "DELETE_CALCULATION";
 export const UPDATE_CALCULATION = "UPDATE_CALCULATION";
+export const GET_RUN_CALCULATION = "GET_RUN_CALCULATION";
+export const RUN_CALCULATION = "RUN_CALCULATION";
 
 ///
 /// State
 ///
 
+// TODO: on design page don't fetch when loading page, only fetch (1) here when choose calc and go to page (2) when pressing evaluate/update/run button
 export interface CalculationState {
   currentCalculation: CalculationT | null;
   calculationStatus: StatusT;
+  calculationRunResults: CalculationRunResponse | null;
+  calculationRunStatus: StatusT;
 }
 
 export const initialState: CalculationState = {
   currentCalculation: null,
   calculationStatus: "idle",
+  calculationRunResults: null,
+  calculationRunStatus: "idle",
 };
 
 ///
@@ -97,6 +110,27 @@ const updateAndGetCalculation =
     return await dispatch(projectsActions.fetchProjects());
   };
 
+const getCalculationItems = createAsyncThunk(GET_RUN_CALCULATION, async (id: number, thunkApi) => {
+  try {
+    return await apiRunCalculation({ id });
+  } catch (err) {
+    thunkApi.dispatch(errorsActions.throwError(`${err}`));
+    return thunkApi.rejectWithValue(null);
+  }
+});
+
+const runCalculation = createAsyncThunk(
+  RUN_CALCULATION,
+  async (calculationRunDto: CalculationRunDto, thunkApi) => {
+    try {
+      return await apiRunCalculation(calculationRunDto);
+    } catch (err) {
+      thunkApi.dispatch(errorsActions.throwError(`${err}`));
+      return thunkApi.rejectWithValue(null);
+    }
+  }
+);
+
 ///
 /// Slice
 ///
@@ -150,6 +184,26 @@ export const calculation = createSlice({
       })
       .addCase(updateCalculation.rejected, (state) => {
         state.calculationStatus = "failed";
+      })
+      .addCase(getCalculationItems.pending, (state) => {
+        state.calculationRunStatus = "loading";
+      })
+      .addCase(getCalculationItems.fulfilled, (state, action) => {
+        state.calculationRunStatus = "idle";
+        state.calculationRunResults = action.payload;
+      })
+      .addCase(getCalculationItems.rejected, (state) => {
+        state.calculationRunStatus = "failed";
+      })
+      .addCase(runCalculation.pending, (state) => {
+        state.calculationRunStatus = "loading";
+      })
+      .addCase(runCalculation.fulfilled, (state, action) => {
+        state.calculationRunStatus = "idle";
+        state.calculationRunResults = action.payload;
+      })
+      .addCase(runCalculation.rejected, (state) => {
+        state.calculationRunStatus = "failed";
       });
   },
 });
@@ -160,6 +214,9 @@ export const calculation = createSlice({
 
 export const getCalculationStatus = (state: RootState) => state.calculation.calculationStatus;
 export const getCurrentCalculation = (state: RootState) => state.calculation.currentCalculation;
+export const getCalculationRunStatus = (state: RootState) => state.calculation.calculationRunStatus;
+export const getCalculationRunResults = (state: RootState) =>
+  state.calculation.calculationRunResults;
 
 export const calculationActions = {
   ...calculation.actions,
@@ -167,5 +224,7 @@ export const calculationActions = {
   createAndGetCalculation,
   deleteAndGetCalculation,
   updateAndGetCalculation,
+  getCalculationItems,
+  runCalculation,
 };
 export default calculation.reducer;

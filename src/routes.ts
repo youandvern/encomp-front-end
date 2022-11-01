@@ -5,6 +5,7 @@ export interface RouteT {
   requireLogin: boolean;
   onlyLoggedOut: boolean;
   requireSelectedTemplate?: boolean;
+  requireCalcRunResults?: boolean;
 }
 
 export const routes: Record<string, RouteT> = {
@@ -50,5 +51,13 @@ export const routes: Record<string, RouteT> = {
     requireLogin: true,
     onlyLoggedOut: false,
     requireSelectedTemplate: true,
+  },
+  calculation: {
+    display: "Design Portal",
+    path: "/calculation",
+    description: "The calculation design page",
+    requireLogin: true,
+    onlyLoggedOut: false,
+    requireCalcRunResults: true,
   },
 };

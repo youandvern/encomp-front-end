@@ -1,10 +1,11 @@
+import { CalcTypeToParse } from "./CalculationRunTypes";
+
 export default interface CalculationT {
   id: number;
   projectId: number;
   templateId: number;
   name: string;
   description?: string;
-  input?: { [key: string]: number | string | null };
 }
 
 export interface CalculationForProjectT {
@@ -19,4 +20,14 @@ export interface CalculationDto {
   description?: string;
   projectId: number;
   templateId: number;
+}
+
+export interface CalculationRunDto {
+  id: number;
+  inputs?: { [key: string]: number | string }; // Sent
+}
+
+export interface CalculationRunResponse {
+  id: number;
+  items: CalcTypeToParse[]; // Received
 }

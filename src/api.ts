@@ -1,5 +1,11 @@
 import Cookies from "js-cookie";
-import CalculationT, { CalculationDto, CalculationForProjectT } from "./commonTypes/CalculationT";
+import { CalcTypeToParse } from "./commonTypes/CalculationRunTypes";
+import CalculationT, {
+  CalculationDto,
+  CalculationForProjectT,
+  CalculationRunDto,
+  CalculationRunResponse,
+} from "./commonTypes/CalculationT";
 import ProjectT, { ProjectDto } from "./commonTypes/ProjectT";
 import TemplateT, { TemplateContentDto, TemplateDto } from "./commonTypes/TemplateT";
 import User, { UserLoginDto, UserRegisterDto } from "./commonTypes/UserT";
@@ -85,6 +91,18 @@ export async function apiDeleteCalculation(id: number): Promise<boolean> {
   } else {
     return Promise.reject(rejectMessage(response, "Failed to delete calculation"));
   }
+}
+
+export async function apiRunCalculation(
+  calculationRunDto: CalculationRunDto
+): Promise<CalculationRunResponse> {
+  const response = await fetch(`${API_BASE_URL}calculations/${calculationRunDto.id}/run/`, {
+    method: "POST",
+    body: JSON.stringify(calculationRunDto),
+    headers: getPostHeadersWithCsrf(),
+    credentials: "include",
+  });
+  return await commonApiReturn(response, `Failed to run calculation`);
 }
 
 export async function apiUpdateCalculation(

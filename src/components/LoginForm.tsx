@@ -2,7 +2,7 @@ import { Button, Container, Stack, Typography } from "@mui/material";
 import { FieldValues, FormContainer, PasswordElement, TextFieldElement } from "react-hook-form-mui";
 import { UserLoginDto } from "../commonTypes/UserT";
 import { useAppDispatch, useAppSelector } from "../hooks";
-import { authActions, getUserStatus } from "../reduxSlices/auth";
+import { authActions, getAuthStatus } from "../reduxSlices/auth";
 import FormPendingSkeleton from "./FormPendingSkeleton";
 
 const defaultValues = {
@@ -12,7 +12,7 @@ const defaultValues = {
 
 export default function LogInForm() {
   const dispatch = useAppDispatch();
-  const userStatus = useAppSelector(getUserStatus);
+  const authStatus = useAppSelector(getAuthStatus);
 
   const handleSubmit = (data: FieldValues) => {
     const userLoginDto = data as UserLoginDto;
@@ -22,7 +22,7 @@ export default function LogInForm() {
   return (
     <>
       <Container maxWidth="sm">
-        {userStatus === "loading" ? (
+        {authStatus === "loading" ? (
           <FormPendingSkeleton />
         ) : (
           <FormContainer defaultValues={defaultValues} onSuccess={handleSubmit}>
