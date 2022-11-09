@@ -114,8 +114,8 @@ export default function CreateCalculationForm() {
     <Typography variant="h5">Please select a project.</Typography>
   ) : (
     <Typography variant="h5">
-      You must <Link to={routes.templates.path}>create a template</Link> for your calculation before
-      creating a calculation instance.
+      You must <Link to={routes.templates.path()}>create a template</Link> for your calculation
+      before creating a calculation instance.
     </Typography>
   );
 }

@@ -1,52 +1,64 @@
 export interface RouteT {
   display: string;
-  path: string;
+  path: (id?: number) => string;
   description: string;
   requireLogin: boolean;
   onlyLoggedOut: boolean;
-  requireSelectedTemplate?: boolean;
+  requireSelectedTemplate?: boolean; // TODO: deprecate restricted route component
   requireCalcRunResults?: boolean;
 }
 
-export const routes: Record<string, RouteT> = {
+// TODO: refactor routes for better typing
+// TODO: make paths functions for dynamic path with input type number | ":id"
+type routeKeys =
+  | "home"
+  | "login"
+  | "register"
+  | "projects"
+  | "templates"
+  | "templateContent"
+  | "calculation";
+
+export const routes: Record<routeKeys, RouteT> = {
   home: {
     display: "Home",
-    path: "/",
+    path: () => "/",
     description: "The home page",
     requireLogin: false,
     onlyLoggedOut: false,
   },
   login: {
     display: "Log In",
-    path: "/login",
+    path: () => "/login",
     description: "The log in page",
     requireLogin: false,
     onlyLoggedOut: true,
   },
   register: {
     display: "Register",
-    path: "/register",
+    path: () => "/register",
     description: "The user registration in page",
     requireLogin: false,
     onlyLoggedOut: true,
   },
   projects: {
     display: "Projects",
-    path: "/projects",
+    path: () => "/projects",
     description: "The projects page",
     requireLogin: true,
     onlyLoggedOut: false,
   },
   templates: {
     display: "Templates",
-    path: "/templates",
+    path: () => "/templates",
     description: "The templates page",
     requireLogin: true,
     onlyLoggedOut: false,
   },
+  // TODO: set up route to include template id with direct navigation
   templateContent: {
     display: "Template Editor",
-    path: "/template-content",
+    path: () => "/template-content",
     description: "The template content editor page",
     requireLogin: true,
     onlyLoggedOut: false,
@@ -54,7 +66,7 @@ export const routes: Record<string, RouteT> = {
   },
   calculation: {
     display: "Design Portal",
-    path: "/calculation",
+    path: (id) => `/calculation/${id || ":id"}`,
     description: "The calculation design page",
     requireLogin: true,
     onlyLoggedOut: false,

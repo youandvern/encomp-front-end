@@ -1,11 +1,7 @@
 import {
   Box,
   Button,
-  Tabs,
-  Tab,
-  TextField,
   Typography,
-  Stack,
   TableContainer,
   Paper,
   Table,
@@ -13,7 +9,6 @@ import {
   TableRow,
   TableCell,
   TableBody,
-  Input,
   InputAdornment,
   OutlinedInput,
   Select,
@@ -23,24 +18,9 @@ import {
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { styled } from "@mui/system";
 
-import { apiFetchTemplateContent, apiUpdateTemplateContent } from "../api";
-import {
-  CalcTypeToParse,
-  CalculationTitle,
-  CalcVariable,
-  CheckVariable,
-  DeclareVariable,
-} from "../commonTypes/CalculationRunTypes";
-import { TemplateContentDto } from "../commonTypes/TemplateT";
-import { useAppDispatch, useAppSelector } from "../hooks";
-import {
-  calculationActions,
-  getCalculationRunResults,
-  getCurrentCalculation,
-} from "../reduxSlices/calculation";
-import { errorsActions } from "../reduxSlices/errors";
-import { getCurrentTemplate } from "../reduxSlices/template";
-import { GLOBAL_THEME } from "../App";
+import { DeclareVariable } from "../commonTypes/CalculationRunTypes";
+import { useAppDispatch } from "../hooks";
+import { calculationActions } from "../reduxSlices/calculation";
 import { CalculationRunDto } from "../commonTypes/CalculationT";
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
@@ -132,6 +112,9 @@ export default function CalculationInputTable({ id, inputItems }: Props) {
   return (
     <Box>
       <TableContainer component={Paper}>
+        <Typography variant="h4" sx={{ marginTop: "1rem", marginLeft: "1rem" }}>
+          Inputs
+        </Typography>
         <Table size="small" aria-label="inputs table">
           <TableHead>
             <TableRow>
@@ -147,11 +130,11 @@ export default function CalculationInputTable({ id, inputItems }: Props) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {inputItems.map((item) => (
-              <StyledTableRow key={"input-row-" + item.name}>
-                <TableCell>{item.description}</TableCell>
-                <TableCell>{item.name}</TableCell>
-                <TableCell>
+            {inputItems.map((item, index) => (
+              <StyledTableRow key={"input-row-" + index}>
+                <TableCell key={"input-desc" + index}>{item.description}</TableCell>
+                <TableCell key={"input-name" + index}>{item.name}</TableCell>
+                <TableCell key={"input-value" + index}>
                   {itemToInput(item, formValues[item.name || ""], handleChange, handleChangeSelect)}
                 </TableCell>
               </StyledTableRow>

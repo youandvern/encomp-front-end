@@ -33,8 +33,11 @@ export default function ErrorManager() {
   useEffect(() => {
     if (userLoggedIn === false) {
       // Avoid navigating to login page when new user visits home page or register page
-      if (location.pathname !== routes.home.path && location.pathname !== routes.register.path) {
-        navigate(routes.login.path);
+      if (
+        location.pathname !== routes.home.path() &&
+        location.pathname !== routes.register.path()
+      ) {
+        navigate(routes.login.path());
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

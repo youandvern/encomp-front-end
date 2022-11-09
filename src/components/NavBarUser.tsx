@@ -35,7 +35,7 @@ export default function NavBarUser() {
           }
         </>
       ) : (
-        <NavBarUserLink to={routes.login.path}>
+        <NavBarUserLink to={routes.login.path()}>
           <Button color="secondary" variant="text">
             Login
           </Button>

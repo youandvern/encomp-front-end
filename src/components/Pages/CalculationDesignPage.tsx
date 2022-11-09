@@ -1,48 +1,39 @@
-import {
-  Box,
-  Button,
-  Tabs,
-  Tab,
-  TextField,
-  Typography,
-  Stack,
-  TableContainer,
-  Paper,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
-} from "@mui/material";
-import React, { ChangeEvent, useEffect, useState } from "react";
-import { apiFetchTemplateContent, apiUpdateTemplateContent } from "../../api";
-import {
-  CalcTypeToParse,
-  CalculationTitle,
-  CalcVariable,
-  CheckVariable,
-  DeclareVariable,
-} from "../../commonTypes/CalculationRunTypes";
-import { TemplateContentDto } from "../../commonTypes/TemplateT";
+import { Typography, Stack } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { CalcTypeToParse, DeclareVariable } from "../../commonTypes/CalculationRunTypes";
 import { useAppDispatch, useAppSelector } from "../../hooks";
-import { getCalculationRunResults, getCurrentCalculation } from "../../reduxSlices/calculation";
-import { errorsActions } from "../../reduxSlices/errors";
-import { getCurrentTemplate } from "../../reduxSlices/template";
+import {
+  calculationActions,
+  getCalculationRunResults,
+  getCurrentCalculation,
+} from "../../reduxSlices/calculation";
 import CalculationInputTable from "../CalculationInputTable";
 import CalculationResultsView from "../CalculationResultsView";
+import { useParams } from "react-router-dom";
+import FormPendingSkeleton from "../FormPendingSkeleton";
 
-// TODO: add page to nav bar and routes (only when calc selected)
-// TODO: break out inputs and results components
+// TODO: fetch current calc if store current doesn't match run current
+// TODO: debug select object throwing errors when defaulting to blank
 // TODO: navigate to page and fetch inputs when choose current calc
-const LOADING_TEXT = "Loading...";
-
+// TODO: refactor for router useLoader (don't pre-fetch before navigating to a page)
+// TODO: each page should be self-loading if refreshed
 export default function CalculationDesignPage() {
+  const dispatch = useAppDispatch();
   const currentCalculationInfo = useAppSelector(getCurrentCalculation);
   const currentRun = useAppSelector(getCalculationRunResults);
-  const dispatch = useAppDispatch();
+  const calcId = useParams().id;
 
   const [inputItems, setInputItems] = useState<DeclareVariable[]>([]);
   const [resultItems, setResultItems] = useState<CalcTypeToParse[]>([]);
+
+  useEffect(() => {
+    if (!!calcId) {
+      if (Number(calcId) !== currentCalculationInfo?.id)
+        dispatch(calculationActions.fetchCalculation(Number(calcId)));
+
+      dispatch(calculationActions.getCalculationItems(Number(calcId)));
+    }
+  }, [calcId]);
 
   useEffect(() => {
     const inputItemList: DeclareVariable[] = [];
@@ -69,14 +60,20 @@ export default function CalculationDesignPage() {
   return (
     <>
       <Stack>
-        <Typography variant="h2">{currentCalculationInfo?.name}</Typography>
-        <Stack direction="row" spacing={4}>
-          <CalculationInputTable
-            id={currentRun?.id || currentCalculationInfo?.id || 0}
-            inputItems={inputItems}
-          />
-          <CalculationResultsView resultItems={resultItems} />
-        </Stack>
+        <Typography variant="h2" align="center" gutterBottom>
+          {currentCalculationInfo?.name}
+        </Typography>
+        {calcId !== currentRun?.id ? (
+          <FormPendingSkeleton />
+        ) : (
+          <Stack direction="row" spacing={4}>
+            <CalculationInputTable
+              id={currentRun?.id || currentCalculationInfo?.id || 0}
+              inputItems={inputItems}
+            />
+            <CalculationResultsView resultItems={resultItems} />
+          </Stack>
+        )}
       </Stack>
     </>
   );

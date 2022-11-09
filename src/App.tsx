@@ -1,7 +1,7 @@
 import { createTheme, ThemeProvider, Container } from "@mui/material";
 import "./App.css";
 import HomePage from "./components/Pages/HomePage";
-import { Routes, Route } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { routes } from "./routes";
 import LogInView from "./components/LoginForm";
 import RegisterView from "./components/RegisterForm";
@@ -9,13 +9,11 @@ import ProjectsPage from "./components/Pages/ProjectsPage";
 import LoggedInRoute from "./components/LoggedInRoute";
 import LoggedOutRoute from "./components/LoggedOutRoute";
 
-import ErrorManager from "./components/ErrorManager";
-import ErrorSnackbar from "./components/ErrorSnackbar";
 import TemplateUploadPage from "./components/Pages/TemplateUploadPage";
 import TemplateContentPage from "./components/Pages/TemplateContentPage";
 import TemplateSelectedRoute from "./components/TemplateSelectedRoute";
-import CalculationRunRequiredRoute from "./components/CalculationRunRequiredRoute";
 import CalculationDesignPage from "./components/Pages/CalculationDesignPage";
+import GlobalBasePage from "./components/Pages/GlobalBasePage";
 
 export const GLOBAL_THEME = createTheme({
   breakpoints: {
@@ -35,6 +33,14 @@ export const GLOBAL_THEME = createTheme({
     secondary: {
       main: "#faa92f",
       light: "#fccc83",
+    },
+    success: {
+      main: "#00af54",
+      light: "#d2ffc8",
+    },
+    error: {
+      main: "#bf211e",
+      light: "#ffc8cb",
     },
   },
   typography: {
@@ -65,36 +71,55 @@ export const GLOBAL_THEME = createTheme({
   },
 });
 
+// TODO: update error page
+const router = createBrowserRouter([
+  {
+    path: routes.home.path(),
+    element: <GlobalBasePage />,
+    errorElement: <div>Sorry, this page is not found.</div>,
+    children: [
+      {
+        errorElement: <div>Sorry, this page is not found.</div>,
+        children: [
+          {
+            index: true,
+            element: <HomePage />,
+          },
+          {
+            path: routes.login.path(),
+            element: <LoggedOutRoute children={<LogInView />} />,
+          },
+          {
+            path: routes.register.path(),
+            element: <LoggedOutRoute children={<RegisterView />} />,
+          },
+          {
+            path: routes.projects.path(),
+            element: <LoggedInRoute children={<ProjectsPage />} />,
+          },
+          {
+            path: routes.templates.path(),
+            element: <LoggedInRoute children={<TemplateUploadPage />} />,
+          },
+          {
+            path: routes.templateContent.path(),
+            element: <TemplateSelectedRoute children={<TemplateContentPage />} />,
+          },
+          {
+            path: routes.calculation.path(),
+            element: <CalculationDesignPage />,
+          },
+        ],
+      },
+    ],
+  },
+]);
+
 function App() {
   return (
     <ThemeProvider theme={GLOBAL_THEME}>
       <Container maxWidth="xl">
-        <ErrorManager />
-        <ErrorSnackbar />
-        <Routes>
-          <Route path={routes.home.path} element={<HomePage />} />
-          <Route path={routes.login.path} element={<LoggedOutRoute children={<LogInView />} />} />
-          <Route
-            path={routes.register.path}
-            element={<LoggedOutRoute children={<RegisterView />} />}
-          />
-          <Route
-            path={routes.projects.path}
-            element={<LoggedInRoute children={<ProjectsPage />} />}
-          />
-          <Route
-            path={routes.templates.path}
-            element={<LoggedInRoute children={<TemplateUploadPage />} />}
-          />
-          <Route
-            path={routes.templateContent.path}
-            element={<TemplateSelectedRoute children={<TemplateContentPage />} />}
-          />
-          <Route
-            path={routes.calculation.path}
-            element={<CalculationRunRequiredRoute children={<CalculationDesignPage />} />}
-          />
-        </Routes>
+        <RouterProvider router={router} />
       </Container>
     </ThemeProvider>
   );

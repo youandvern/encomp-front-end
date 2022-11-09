@@ -36,6 +36,8 @@ const shouldDisplay = (
 };
 // (!route.requireLogin || isLoggedIn) && !(route.onlyLoggedOut && isLoggedIn);
 
+// TODO: template and calc routes should auto-populate the id
+
 // adapted from https://mui.com/material-ui/react-app-bar/
 export default function NavBar() {
   const isLoggedIn = useAppSelector(isUserLoggedIn);
@@ -92,9 +94,9 @@ export default function NavBar() {
                   shouldDisplay(route, isLoggedIn, isTemplateSelected, isCalcRunReceived)
                 )
                 .map((route) => (
-                  <MenuItem key={"menu-item-" + route.path} onClick={handleCloseIconMenu}>
+                  <MenuItem key={"menu-item-" + route.path()} onClick={handleCloseIconMenu}>
                     <Typography textAlign="center">
-                      <NavBarLink to={route.path}>{route.display}</NavBarLink>
+                      <NavBarLink to={route.path()}>{route.display}</NavBarLink>
                     </Typography>
                   </MenuItem>
                 ))}
@@ -107,7 +109,7 @@ export default function NavBar() {
                 shouldDisplay(route, isLoggedIn, isTemplateSelected, isCalcRunReceived)
               )
               .map((route) => (
-                <NavBarLink key={"menu-link-" + route.path} to={route.path}>
+                <NavBarLink key={"menu-link-" + route.path()} to={route.path()}>
                   <Button
                     onClick={handleCloseIconMenu}
                     sx={{ my: 2, color: "white", display: "block", fontWeight: "bold" }}

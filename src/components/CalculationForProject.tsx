@@ -10,6 +10,7 @@ import { calculationActions, getCurrentCalculation } from "../reduxSlices/calcul
 import DeleteAlertButton from "./DeleteAlertButton";
 import UpdateFormButton from "./UpdateFormButton";
 import { useNavigate } from "react-router-dom";
+import { routes } from "../routes";
 
 interface Props {
   calculation: CalculationForProjectT;
@@ -25,7 +26,7 @@ export default function Calculation({ calculation }: Props) {
     dispatch(
       calculationActions.setCurrentCalculation({ ...calculation, projectId: projectSelected })
     );
-    dispatch(calculationActions.getCalculationItems(calculation.id));
+    navigate(routes.calculation.path(calculation.id));
   };
 
   return (
