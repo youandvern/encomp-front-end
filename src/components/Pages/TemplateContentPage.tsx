@@ -1,10 +1,11 @@
 import { Box, Button, Tabs, Tab, TextField, Typography } from "@mui/material";
 import React, { ChangeEvent, useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { apiFetchTemplateContent, apiUpdateTemplateContent } from "../../api";
 import { TemplateContentDto } from "../../commonTypes/TemplateT";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { errorsActions } from "../../reduxSlices/errors";
-import { getCurrentTemplate } from "../../reduxSlices/template";
+import { getCurrentTemplate, templatesActions } from "../../reduxSlices/template";
 
 const LOADING_TEXT = "Loading...";
 
@@ -34,10 +35,11 @@ function TabPanel(props: TabPanelProps) {
 export default function TemplateContentPage() {
   const currentTemplate = useAppSelector(getCurrentTemplate);
   const dispatch = useAppDispatch();
+  const calcId = Number(useParams().id);
 
   const [value, setValue] = useState(0);
   const [content, setContent] = useState<TemplateContentDto>({
-    id: currentTemplate?.id || 0,
+    id: calcId || 0,
     content: "",
   });
   const [displayContent, setDisplay] = useState(LOADING_TEXT);
@@ -59,18 +61,26 @@ export default function TemplateContentPage() {
     apiUpdateTemplateContent(content).catch((err) => dispatch(errorsActions.throwError(err)));
   };
 
+  // Fetch all required data if not already in store i.e. direct page load
+  useEffect(() => {
+    if (calcId !== currentTemplate?.id && calcId) {
+      dispatch(templatesActions.fetchTemplates());
+      dispatch(templatesActions.setCurrentTemplate(calcId));
+    }
+  }, [calcId]);
+
   // fetch and set content
   useEffect(() => {
-    if (currentTemplate) {
-      setDisplay("LOADING_TEXT");
-      apiFetchTemplateContent(currentTemplate?.id)
+    if (calcId) {
+      setDisplay(LOADING_TEXT);
+      apiFetchTemplateContent(calcId)
         .then((cont) => {
-          setContent({ id: currentTemplate?.id || 0, content: cont });
+          setContent({ id: calcId, content: cont });
           setDisplay(cont);
         })
         .catch((err) => dispatch(errorsActions.throwError(err)));
     }
-  }, [currentTemplate]);
+  }, [calcId]);
 
   return (
     <>

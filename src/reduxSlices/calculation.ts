@@ -28,7 +28,6 @@ export const RUN_CALCULATION = "RUN_CALCULATION";
 /// State
 ///
 
-// TODO: on design page don't fetch when loading page, only fetch (1) here when choose calc and go to page (2) when pressing evaluate/update/run button
 export interface CalculationState {
   currentCalculation: CalculationT | null;
   calculationStatus: StatusT;

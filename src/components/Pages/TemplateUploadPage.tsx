@@ -1,7 +1,9 @@
-import { Stack } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
+import AddCircleOutlineRoundedIcon from "@mui/icons-material/AddCircleOutlineRounded";
 import React, { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { getTemplates, templatesActions } from "../../reduxSlices/template";
+import FormDialog from "../FormDialog";
 import CreateTemplateForm from "../Forms/CreateTemplateForm";
 import Template from "../Template";
 
@@ -15,8 +17,14 @@ export default function TemplateUploadPage() {
 
   return (
     <>
-      <CreateTemplateForm />
       <Stack spacing={2} alignItems="center" marginTop="2rem">
+        <Stack direction="row">
+          <Typography variant="h2">Templates: </Typography>
+          <FormDialog
+            FormComponent={CreateTemplateForm}
+            ButtonComponent={<AddCircleOutlineRoundedIcon fontSize="large" color="success" />}
+          />
+        </Stack>
         {templates.map((template) => (
           <Template key={"template-" + template.id} template={template} />
         ))}

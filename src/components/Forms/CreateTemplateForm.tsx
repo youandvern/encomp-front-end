@@ -1,6 +1,7 @@
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
 import React, { ChangeEvent, FormEvent, useState } from "react";
+import { CreateFormProps } from "../../commonTypes/FormProps";
 import { useAppDispatch } from "../../hooks";
 import { templatesActions } from "../../reduxSlices/template";
 
@@ -10,7 +11,7 @@ const defaultValues = {
   fileContent: "",
 };
 
-export default function CreateTemplateForm() {
+export default function CreateTemplateForm({ onSubmit }: CreateFormProps) {
   const dispatch = useAppDispatch();
   const [formValues, setValues] = useState(defaultValues);
 
@@ -23,6 +24,7 @@ export default function CreateTemplateForm() {
     event.preventDefault();
     dispatch(templatesActions.createAndGetTemplate(formValues));
     setValues(defaultValues);
+    if (onSubmit) onSubmit();
   };
 
   return (

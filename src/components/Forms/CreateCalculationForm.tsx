@@ -15,6 +15,7 @@ import { Stack } from "@mui/system";
 import React, { ChangeEvent, FormEvent, useState } from "react";
 import { Link } from "react-router-dom";
 import { CalculationDto } from "../../commonTypes/CalculationT";
+import { CreateFormProps } from "../../commonTypes/FormProps";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { calculationActions } from "../../reduxSlices/calculation";
 import { errorsActions } from "../../reduxSlices/errors";
@@ -28,7 +29,7 @@ const defaultValues = {
   templateId: -1,
 };
 
-export default function CreateCalculationForm() {
+export default function CreateCalculationForm({ onSubmit }: CreateFormProps) {
   const currentProject = useAppSelector(getCurrentProject);
   const templates = useAppSelector(getTemplates);
   const dispatch = useAppDispatch();
@@ -56,6 +57,7 @@ export default function CreateCalculationForm() {
       const calcDto = { ...formValues, projectId: currentProject?.id } as CalculationDto;
       dispatch(calculationActions.createAndGetCalculation(calcDto));
       setValues(defaultValues);
+      if (onSubmit) onSubmit();
     }
   };
 
@@ -80,7 +82,7 @@ export default function CreateCalculationForm() {
               name="templateId"
               labelId="template-select-label"
               label="Template *"
-              value={formValues.templateId < 0 ? undefined : formValues.templateId}
+              value={formValues.templateId < 0 ? "" : formValues.templateId}
               onChange={handleChangeSelect}
             >
               {templates.map((template) => (

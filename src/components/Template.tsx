@@ -21,11 +21,11 @@ export default function Template({ template }: Props) {
 
   const handleClick = () => {
     dispatch(templatesActions.setCurrentTemplate(template.id));
-    navigate(routes.templateContent.path());
+    navigate(routes.templateContent.path(template.id));
   };
 
-  // TODO: calculation design and results form
   // TODO: calculation reports
+  // TODO: Mathjax
   return (
     <Card
       sx={{

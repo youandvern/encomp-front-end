@@ -12,7 +12,6 @@ import { useAppSelector } from "../hooks";
 import { getCalculationRunStatus } from "../reduxSlices/calculation";
 
 // TODO: check tooltip should show var descriptions and substituted (separate lines)
-// TODO: add keys to generated components
 interface Props {
   resultItems: CalcTypeToParse[];
 }
@@ -31,6 +30,7 @@ export default function CalculationResultsView({ resultItems }: Props) {
             const parsedCalc = item as CalcVariable;
             return (
               <Box
+                key={"calc-description-box-" + index}
                 padding="0.5rem"
                 margin="0.5rem"
                 sx={{
@@ -50,6 +50,7 @@ export default function CalculationResultsView({ resultItems }: Props) {
             const check = item as CheckVariable;
             return (
               <Box
+                key={"calc-description-box-" + index}
                 padding="0.5rem"
                 margin="0.5rem"
                 sx={{
@@ -79,6 +80,7 @@ export default function CalculationResultsView({ resultItems }: Props) {
             const textcheck = item as CheckVariablesText;
             return (
               <Box
+                key={"calc-description-box-" + index}
                 padding="0.5rem"
                 margin="0.5rem"
                 sx={{

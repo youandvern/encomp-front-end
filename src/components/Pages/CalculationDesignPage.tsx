@@ -12,11 +12,6 @@ import CalculationResultsView from "../CalculationResultsView";
 import { useParams } from "react-router-dom";
 import FormPendingSkeleton from "../FormPendingSkeleton";
 
-// TODO: fetch current calc if store current doesn't match run current
-// TODO: debug select object throwing errors when defaulting to blank
-// TODO: navigate to page and fetch inputs when choose current calc
-// TODO: refactor for router useLoader (don't pre-fetch before navigating to a page)
-// TODO: each page should be self-loading if refreshed
 export default function CalculationDesignPage() {
   const dispatch = useAppDispatch();
   const currentCalculationInfo = useAppSelector(getCurrentCalculation);

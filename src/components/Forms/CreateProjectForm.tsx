@@ -1,6 +1,7 @@
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
 import { Stack } from "@mui/system";
 import React, { ChangeEvent, FormEvent, useState } from "react";
+import { CreateFormProps } from "../../commonTypes/FormProps";
 import { useAppDispatch } from "../../hooks";
 import { projectsActions } from "../../reduxSlices/projects";
 
@@ -9,7 +10,7 @@ const defaultValues = {
   description: "",
 };
 
-export default function CreateProjectForm() {
+export default function CreateProjectForm({ onSubmit }: CreateFormProps) {
   const dispatch = useAppDispatch();
   const [formValues, setValues] = useState(defaultValues);
 
@@ -22,6 +23,7 @@ export default function CreateProjectForm() {
     event.preventDefault();
     dispatch(projectsActions.createAndGetProject(formValues));
     setValues(defaultValues);
+    if (onSubmit) onSubmit();
   };
 
   return (

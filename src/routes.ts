@@ -2,14 +2,13 @@ export interface RouteT {
   display: string;
   path: (id?: number) => string;
   description: string;
+  appendIdType: "none" | "calculation" | "template";
   requireLogin: boolean;
   onlyLoggedOut: boolean;
-  requireSelectedTemplate?: boolean; // TODO: deprecate restricted route component
+  requireSelectedTemplate?: boolean;
   requireCalcRunResults?: boolean;
 }
 
-// TODO: refactor routes for better typing
-// TODO: make paths functions for dynamic path with input type number | ":id"
 type routeKeys =
   | "home"
   | "login"
@@ -24,6 +23,7 @@ export const routes: Record<routeKeys, RouteT> = {
     display: "Home",
     path: () => "/",
     description: "The home page",
+    appendIdType: "none",
     requireLogin: false,
     onlyLoggedOut: false,
   },
@@ -31,6 +31,7 @@ export const routes: Record<routeKeys, RouteT> = {
     display: "Log In",
     path: () => "/login",
     description: "The log in page",
+    appendIdType: "none",
     requireLogin: false,
     onlyLoggedOut: true,
   },
@@ -38,6 +39,7 @@ export const routes: Record<routeKeys, RouteT> = {
     display: "Register",
     path: () => "/register",
     description: "The user registration in page",
+    appendIdType: "none",
     requireLogin: false,
     onlyLoggedOut: true,
   },
@@ -45,6 +47,7 @@ export const routes: Record<routeKeys, RouteT> = {
     display: "Projects",
     path: () => "/projects",
     description: "The projects page",
+    appendIdType: "none",
     requireLogin: true,
     onlyLoggedOut: false,
   },
@@ -52,14 +55,15 @@ export const routes: Record<routeKeys, RouteT> = {
     display: "Templates",
     path: () => "/templates",
     description: "The templates page",
+    appendIdType: "none",
     requireLogin: true,
     onlyLoggedOut: false,
   },
-  // TODO: set up route to include template id with direct navigation
   templateContent: {
     display: "Template Editor",
-    path: () => "/template-content",
+    path: (id) => `/template/${id || ":id"}`,
     description: "The template content editor page",
+    appendIdType: "template",
     requireLogin: true,
     onlyLoggedOut: false,
     requireSelectedTemplate: true,
@@ -68,6 +72,7 @@ export const routes: Record<routeKeys, RouteT> = {
     display: "Design Portal",
     path: (id) => `/calculation/${id || ":id"}`,
     description: "The calculation design page",
+    appendIdType: "calculation",
     requireLogin: true,
     onlyLoggedOut: false,
     requireCalcRunResults: true,

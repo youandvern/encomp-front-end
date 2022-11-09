@@ -11,7 +11,6 @@ import LoggedOutRoute from "./components/LoggedOutRoute";
 
 import TemplateUploadPage from "./components/Pages/TemplateUploadPage";
 import TemplateContentPage from "./components/Pages/TemplateContentPage";
-import TemplateSelectedRoute from "./components/TemplateSelectedRoute";
 import CalculationDesignPage from "./components/Pages/CalculationDesignPage";
 import GlobalBasePage from "./components/Pages/GlobalBasePage";
 
@@ -76,10 +75,10 @@ const router = createBrowserRouter([
   {
     path: routes.home.path(),
     element: <GlobalBasePage />,
-    errorElement: <div>Sorry, this page is not found.</div>,
+    errorElement: <div>Sorry, this page doesn't seem to exist.</div>,
     children: [
       {
-        errorElement: <div>Sorry, this page is not found.</div>,
+        errorElement: <div>Sorry, this page doesn't seem to exist.</div>,
         children: [
           {
             index: true,
@@ -103,7 +102,7 @@ const router = createBrowserRouter([
           },
           {
             path: routes.templateContent.path(),
-            element: <TemplateSelectedRoute children={<TemplateContentPage />} />,
+            element: <TemplateContentPage />,
           },
           {
             path: routes.calculation.path(),
