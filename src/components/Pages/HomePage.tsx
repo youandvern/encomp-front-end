@@ -14,7 +14,6 @@ export default function HomePage() {
 
   return (
     <>
-      <br />
       <Typography variant="h2">Welcome Home</Typography>
       <Typography>Here's some interesting content.</Typography>
       <button onClick={signalNewAlert}>Alert</button>

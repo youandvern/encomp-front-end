@@ -25,7 +25,6 @@ export default function Template({ template }: Props) {
   };
 
   // TODO: calculation reports
-  // TODO: Mathjax
   return (
     <Card
       sx={{

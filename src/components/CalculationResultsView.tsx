@@ -70,9 +70,7 @@ export default function CalculationResultsView({ resultItems }: Props) {
                     justifyContent="center"
                   >
                     {`\\( \\begin{align} ${check.symbolic} \\end{align}\\)`}
-                    <ArrowForwardIcon
-                      sx={{ paddingInlineStart: "0.5em", paddingInlineEnd: "0.5em" }}
-                    />
+                    <ArrowForwardIcon sx={{ paddingInline: "0.5em" }} />
                     {check.resultMessage}
                   </Typography>
                 </Tooltip>

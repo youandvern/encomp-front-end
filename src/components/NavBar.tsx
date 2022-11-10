@@ -10,16 +10,16 @@ import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import { routes, RouteT } from "../routes";
-import { Link } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import styled from "@emotion/styled";
 import { useAppSelector } from "../hooks";
 import { isUserLoggedIn } from "../reduxSlices/auth";
 import NavBarUser from "./NavBarUser";
 import { getCurrentTemplateId } from "../reduxSlices/template";
 import { getCalculationRunResults } from "../reduxSlices/calculation";
+import { GLOBAL_THEME } from "../App";
 
-// TODO: show current Nav Link
-const NavBarLink = styled(Link)({
+const NavBarLink = styled(NavLink)({
   textDecoration: "none",
 });
 
@@ -54,6 +54,7 @@ export default function NavBar() {
   const currentCalcRun = useAppSelector(getCalculationRunResults);
   const isTemplateSelected = currentTemplateId != null;
   const isCalcRunReceived = currentCalcRun != null;
+  const currentPath = useLocation().pathname;
 
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
 
@@ -67,77 +68,109 @@ export default function NavBar() {
 
   return (
     <AppBar position="static">
-      <Container maxWidth="xl">
-        <Toolbar disableGutters>
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", sm: "none" } }}>
-            <IconButton
-              size="large"
-              aria-label="site menu options"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenIconMenu}
-              color="inherit"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "center",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseIconMenu}
-              sx={{
-                display: { xs: "block", md: "none" },
-              }}
-            >
-              {Object.values(routes)
-                .filter((route) =>
-                  shouldDisplay(route, isLoggedIn, isTemplateSelected, isCalcRunReceived)
-                )
-                .map((route) => (
-                  <MenuItem key={"menu-item-" + route.path()} onClick={handleCloseIconMenu}>
-                    <Typography textAlign="center">
-                      <NavBarLink to={getPath(route, currentCalcRun?.id, currentTemplateId)}>
-                        {route.display}
-                      </NavBarLink>
-                    </Typography>
-                  </MenuItem>
-                ))}
-            </Menu>
-          </Box>
+      <Toolbar disableGutters>
+        <Box sx={{ display: { xs: "none", lg: "flex" }, height: "100%", backgroundColor: "white" }}>
+          <Link to={routes.home.path()}>
+            <img src="/ENCOMP.png" alt="Encomp Logo" className="main-logo"></img>
+          </Link>
+        </Box>
 
-          <Box sx={{ flexGrow: 1, display: { xs: "none", sm: "flex" } }}>
+        <Box sx={{ flexGrow: 1, display: { xs: "flex", lg: "none" } }}>
+          <IconButton
+            size="large"
+            aria-label="site menu options"
+            aria-controls="menu-appbar"
+            aria-haspopup="true"
+            onClick={handleOpenIconMenu}
+            color="inherit"
+          >
+            <MenuIcon />
+          </IconButton>
+          <Menu
+            id="menu-appbar"
+            anchorEl={anchorElNav}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "center",
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "left",
+            }}
+            open={Boolean(anchorElNav)}
+            onClose={handleCloseIconMenu}
+            sx={{
+              display: { xs: "block", lg: "none" },
+            }}
+          >
             {Object.values(routes)
               .filter((route) =>
                 shouldDisplay(route, isLoggedIn, isTemplateSelected, isCalcRunReceived)
               )
               .map((route) => (
-                <NavBarLink
-                  key={"menu-link-" + route.path()}
-                  to={getPath(route, currentCalcRun?.id, currentTemplateId)}
-                >
+                <MenuItem key={"menu-item-" + route.path()} onClick={handleCloseIconMenu}>
+                  <Typography textAlign="center">
+                    <NavBarLink to={getPath(route, currentCalcRun?.id, currentTemplateId)}>
+                      {route.display}
+                    </NavBarLink>
+                  </Typography>
+                </MenuItem>
+              ))}
+          </Menu>
+        </Box>
+
+        <Box
+          sx={{
+            display: { xs: "flex", lg: "none" },
+            height: "100%",
+            backgroundColor: "white",
+          }}
+        >
+          <Link to={routes.home.path()}>
+            <img src="/ENCOMP.png" alt="Encomp Logo" className="main-logo"></img>
+          </Link>
+        </Box>
+        <Box
+          sx={{
+            flexGrow: 1,
+            display: { xs: "flex", lg: "none" },
+          }}
+        ></Box>
+
+        <Box sx={{ flexGrow: 1, display: { xs: "none", lg: "flex" } }}>
+          {Object.values(routes)
+            .filter((route) =>
+              shouldDisplay(route, isLoggedIn, isTemplateSelected, isCalcRunReceived)
+            )
+            .map((route) => (
+              <NavBarLink
+                key={"menu-link-" + route.path()}
+                to={getPath(route, currentCalcRun?.id, currentTemplateId)}
+              >
+                {({ isActive }) => (
                   <Button
                     onClick={handleCloseIconMenu}
-                    sx={{ my: 2, color: "white", display: "block", fontWeight: "bold" }}
+                    sx={{
+                      my: 2,
+                      color:
+                        isActive && (route.path() !== "/" || currentPath === "/")
+                          ? GLOBAL_THEME.palette.secondary.main
+                          : "white",
+                      display: "block",
+                      fontWeight: "bold",
+                    }}
                   >
                     {route.display}
                   </Button>
-                </NavBarLink>
-              ))}
-          </Box>
-          <Box sx={{ flexGrow: 0 }}>
-            <NavBarUser />
-          </Box>
-        </Toolbar>
-      </Container>
+                )}
+              </NavBarLink>
+            ))}
+        </Box>
+        <Box sx={{ flexGrow: 0 }}>
+          <NavBarUser />
+        </Box>
+      </Toolbar>
     </AppBar>
   );
 }
