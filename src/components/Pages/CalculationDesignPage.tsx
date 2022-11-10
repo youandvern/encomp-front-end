@@ -11,7 +11,9 @@ import CalculationInputTable from "../CalculationInputTable";
 import CalculationResultsView from "../CalculationResultsView";
 import { useParams } from "react-router-dom";
 import FormPendingSkeleton from "../FormPendingSkeleton";
+import { updateMathJax } from "../..";
 
+// TODO: Improve loading skeleton
 export default function CalculationDesignPage() {
   const dispatch = useAppDispatch();
   const currentCalculationInfo = useAppSelector(getCurrentCalculation);
@@ -20,6 +22,11 @@ export default function CalculationDesignPage() {
 
   const [inputItems, setInputItems] = useState<DeclareVariable[]>([]);
   const [resultItems, setResultItems] = useState<CalcTypeToParse[]>([]);
+
+  // update mathjax whenever math containing items change
+  useEffect(() => {
+    updateMathJax();
+  }, [inputItems, resultItems]);
 
   useEffect(() => {
     if (!!calcId) {

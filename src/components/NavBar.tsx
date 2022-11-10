@@ -18,6 +18,7 @@ import NavBarUser from "./NavBarUser";
 import { getCurrentTemplateId } from "../reduxSlices/template";
 import { getCalculationRunResults } from "../reduxSlices/calculation";
 
+// TODO: show current Nav Link
 const NavBarLink = styled(Link)({
   textDecoration: "none",
 });

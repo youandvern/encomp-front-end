@@ -12,6 +12,7 @@ import { useAppSelector } from "../hooks";
 import { getCalculationRunStatus } from "../reduxSlices/calculation";
 
 // TODO: check tooltip should show var descriptions and substituted (separate lines)
+// TODO: no mathjax on tooltip
 interface Props {
   resultItems: CalcTypeToParse[];
 }
@@ -41,8 +42,7 @@ export default function CalculationResultsView({ resultItems }: Props) {
               >
                 <Typography key={`calc-description-${index}`}>{parsedCalc.description}</Typography>
                 <Typography key={`calc-result-${index}`} align="center">
-                  {parsedCalc.name}
-                  {parsedCalc.resultWithUnit}
+                  {`\\( ${parsedCalc.name} ${parsedCalc.resultWithUnit} \\)`}
                 </Typography>
               </Box>
             );
@@ -62,15 +62,17 @@ export default function CalculationResultsView({ resultItems }: Props) {
                   borderRadius: "1rem",
                 }}
               >
-                <Tooltip title={check.substituted || "Check Results"}>
+                <Tooltip title={`\\(${check.substituted}\\)` || "Check Results"}>
                   <Typography
                     key={`check-${index}`}
                     display="flex"
                     align="center"
                     justifyContent="center"
                   >
-                    {check.symbolic}
-                    <ArrowForwardIcon />
+                    {`\\( \\begin{align} ${check.symbolic} \\end{align}\\)`}
+                    <ArrowForwardIcon
+                      sx={{ paddingInlineStart: "0.5em", paddingInlineEnd: "0.5em" }}
+                    />
                     {check.resultMessage}
                   </Typography>
                 </Tooltip>
@@ -97,7 +99,7 @@ export default function CalculationResultsView({ resultItems }: Props) {
                     align="center"
                     justifyContent="center"
                   >
-                    {textcheck.symbolic}
+                    {`\\(${textcheck.symbolic}\\)`}
                   </Typography>
                 </Tooltip>
               </Box>

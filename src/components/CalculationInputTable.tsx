@@ -64,7 +64,7 @@ const itemToInput = (
         max: item.maxValue,
         step: item.numStep,
       }}
-      endAdornment={<InputAdornment position="end">{item.unit}</InputAdornment>}
+      endAdornment={<InputAdornment position="end">{`\\(${item.unit}\\)`}</InputAdornment>}
       onChange={handleChange}
       margin="none"
       size="small"
@@ -133,7 +133,7 @@ export default function CalculationInputTable({ id, inputItems }: Props) {
             {inputItems.map((item, index) => (
               <StyledTableRow key={"input-row-" + index}>
                 <TableCell key={"input-desc" + index}>{item.description}</TableCell>
-                <TableCell key={"input-name" + index}>{item.name}</TableCell>
+                <TableCell key={"input-name" + index}>{`\\(${item.name}\\)`}</TableCell>
                 <TableCell key={"input-value" + index}>
                   {itemToInput(item, formValues[item.name || ""], handleChange, handleChangeSelect)}
                 </TableCell>
