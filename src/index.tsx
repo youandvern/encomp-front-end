@@ -1,11 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { Provider } from "react-redux";
 import { store } from "./store";
 
+// TODO: test and configure linebreaks correctly
 (window as any).MathJax = {
   linebreaks: {
     // options for when overflow is linebreak

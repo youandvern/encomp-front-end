@@ -13,6 +13,7 @@ import TemplateUploadPage from "./components/Pages/TemplateUploadPage";
 import TemplateContentPage from "./components/Pages/TemplateContentPage";
 import CalculationDesignPage from "./components/Pages/CalculationDesignPage";
 import GlobalBasePage from "./components/Pages/GlobalBasePage";
+import CalculationReportPage from "./components/Pages/CalculationReportPage";
 
 export const GLOBAL_THEME = createTheme({
   breakpoints: {
@@ -111,6 +112,11 @@ const router = createBrowserRouter([
         ],
       },
     ],
+  },
+  {
+    path: routes.calculationReport.path(),
+    element: <CalculationReportPage />,
+    errorElement: <div>Sorry, this page doesn't seem to exist.</div>,
   },
 ]);
 

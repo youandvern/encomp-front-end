@@ -2,7 +2,7 @@ export interface RouteT {
   display: string;
   path: (id?: number) => string;
   description: string;
-  appendIdType: "none" | "calculation" | "template";
+  appendIdType: "none" | "calculation" | "template" | "calculationReport";
   requireLogin: boolean;
   onlyLoggedOut: boolean;
   requireSelectedTemplate?: boolean;
@@ -16,7 +16,8 @@ type routeKeys =
   | "projects"
   | "templates"
   | "templateContent"
-  | "calculation";
+  | "calculation"
+  | "calculationReport";
 
 export const routes: Record<routeKeys, RouteT> = {
   home: {
@@ -75,6 +76,15 @@ export const routes: Record<routeKeys, RouteT> = {
     appendIdType: "calculation",
     requireLogin: true,
     onlyLoggedOut: false,
+    requireCalcRunResults: true,
+  },
+  calculationReport: {
+    display: "Calculation Report",
+    path: (id) => `/calculation-report/${id || ":id"}`,
+    description: "The calculation report print page",
+    appendIdType: "calculationReport",
+    requireLogin: true, // never display on menu bar when both are true
+    onlyLoggedOut: true,
     requireCalcRunResults: true,
   },
 };

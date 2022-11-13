@@ -69,7 +69,12 @@ export default function NavBar() {
   return (
     <AppBar position="static">
       <Toolbar disableGutters>
-        <Box sx={{ display: { xs: "none", lg: "flex" }, height: "100%", backgroundColor: "white" }}>
+        <Box
+          sx={{
+            display: { xs: "none", lg: "flex" },
+            backgroundColor: "white",
+          }}
+        >
           <Link to={routes.home.path()}>
             <img src="/ENCOMP.png" alt="Encomp Logo" className="main-logo"></img>
           </Link>

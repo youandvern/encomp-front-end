@@ -51,7 +51,7 @@ export interface CheckVariable {
   unit?: string;
   description?: string;
   codeRef?: string;
-  finalResult?: boolean;
+  finalResult?: boolean; // rename finalResult
   symbolic?: string;
   substituted?: string;
   resultWithUnit?: string;
@@ -72,7 +72,7 @@ export interface BodyText {
 
 export interface BodyHeader {
   value?: string;
-  codeRef?: string;
+  codeRef?: string; // TODO: implement this/general codeRef in calc report
   level?: number;
 }
 
