@@ -1,4 +1,4 @@
-import { Box, Typography, Paper, Tooltip, useTheme, CircularProgress } from "@mui/material";
+import { Box, Typography, Paper, Tooltip, useTheme, Stack } from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import React from "react";
 
@@ -10,21 +10,39 @@ import {
 } from "../commonTypes/CalculationRunTypes";
 import { useAppSelector } from "../hooks";
 import { getCalculationRunStatus } from "../reduxSlices/calculation";
+import ResultActionButtons from "./ResultActionButtons";
+import { FormValuesT } from "./CalculationInputTable";
 
+// TODO: grey out results when input changed
+// TODO: print and view calc report
 // TODO: check tooltip should show var descriptions and substituted (separate lines)
 // TODO: no mathjax on tooltip
 interface Props {
+  id: number;
   resultItems: CalcTypeToParse[];
+  updatedInputState: [FormValuesT, React.Dispatch<React.SetStateAction<FormValuesT>>];
+  inputsChangedState: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
 }
 
-export default function CalculationResultsView({ resultItems }: Props) {
+export default function CalculationResultsView({
+  id,
+  resultItems,
+  inputsChangedState,
+  updatedInputState,
+}: Props) {
   const theme = useTheme();
   const runStatus = useAppSelector(getCalculationRunStatus);
   return (
     <Box component={Paper} padding="1rem" height="fit-content">
-      <Typography variant="h4">
-        Results {runStatus === "loading" && <CircularProgress size="0.75em" />}
-      </Typography>
+      <Stack direction="row">
+        <Typography variant="h4">Results </Typography>
+        <ResultActionButtons
+          id={id}
+          updatedInputState={updatedInputState}
+          inputsChangedState={inputsChangedState}
+          runLoading={runStatus === "loading" || false}
+        />
+      </Stack>
       {resultItems.map((item, index) => {
         switch (item.type) {
           case "CalcVariable":

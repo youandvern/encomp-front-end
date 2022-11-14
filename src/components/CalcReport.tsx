@@ -22,6 +22,8 @@ import CalcVariableReport from "./CalcReportComponents/CalcVariableReport";
 import CheckVariableReport from "./CalcReportComponents/CheckVariableReport";
 import CheckVariablesTextReport from "./CalcReportComponents/CheckVariablesTextReport";
 import { getCalcKey } from "./CalcReportComponents/reportUtilities";
+import { useEffect } from "react";
+import { updateMathJax } from "..";
 
 const headLevelToFontSize = {
   1: "2rem",
@@ -53,11 +55,15 @@ const incrementAndGetHeaderCount = (headerCounts: number[], level: number) => {
   return headerCounts;
 };
 
-// TODO: add keys to all outer level components
 // TODO: allow calc title in addition to template title in calc report
 export default function CalcReport() {
   const runResults = useAppSelector(getCalculationRunResults)?.items;
   let headerCounts = [0];
+
+  // update mathjax whenever math containing items change
+  useEffect(() => {
+    updateMathJax();
+  }, [runResults]);
 
   return (
     <Box maxWidth="980px">

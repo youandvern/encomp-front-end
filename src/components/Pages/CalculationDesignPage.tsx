@@ -7,7 +7,7 @@ import {
   getCalculationRunResults,
   getCurrentCalculation,
 } from "../../reduxSlices/calculation";
-import CalculationInputTable from "../CalculationInputTable";
+import CalculationInputTable, { FormValuesT } from "../CalculationInputTable";
 import CalculationResultsView from "../CalculationResultsView";
 import { useParams } from "react-router-dom";
 import FormPendingSkeleton from "../FormPendingSkeleton";
@@ -22,6 +22,8 @@ export default function CalculationDesignPage() {
 
   const [inputItems, setInputItems] = useState<DeclareVariable[]>([]);
   const [resultItems, setResultItems] = useState<CalcTypeToParse[]>([]);
+  const updatedInputState = useState<FormValuesT>({});
+  const inputsChangedState = useState(false);
 
   // update mathjax whenever math containing items change
   useEffect(() => {
@@ -72,8 +74,15 @@ export default function CalculationDesignPage() {
             <CalculationInputTable
               id={currentRun?.id || currentCalculationInfo?.id || 0}
               inputItems={inputItems}
+              inputsChangedState={inputsChangedState}
+              updatedInputState={updatedInputState}
             />
-            <CalculationResultsView resultItems={resultItems} />
+            <CalculationResultsView
+              id={currentRun?.id || currentCalculationInfo?.id || 0}
+              resultItems={resultItems}
+              inputsChangedState={inputsChangedState}
+              updatedInputState={updatedInputState}
+            />
           </Stack>
         )}
       </Stack>

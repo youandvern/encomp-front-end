@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Typography,
   TableContainer,
   Paper,
@@ -15,13 +14,10 @@ import {
   SelectChangeEvent,
   MenuItem,
 } from "@mui/material";
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect } from "react";
 import { styled } from "@mui/system";
 
 import { DeclareVariable } from "../commonTypes/CalculationRunTypes";
-import { useAppDispatch } from "../hooks";
-import { calculationActions } from "../reduxSlices/calculation";
-import { CalculationRunDto } from "../commonTypes/CalculationT";
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   "&:nth-of-type(odd)": {
@@ -34,6 +30,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     backgroundColor: theme.palette.primary.light,
   },
 }));
+
+// TODO: fix bug with saving input = 0
 
 const itemToInput = (
   item: DeclareVariable,
@@ -72,33 +70,35 @@ const itemToInput = (
     />
   );
 
-interface FormValuesT {
+export interface FormValuesT {
   [key: string]: string | number;
 }
 
 interface Props {
   id: number;
   inputItems: DeclareVariable[];
+  updatedInputState: [FormValuesT, React.Dispatch<React.SetStateAction<FormValuesT>>];
+  inputsChangedState: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
 }
 
-export default function CalculationInputTable({ id, inputItems }: Props) {
-  const dispatch = useAppDispatch();
-  const [formValues, setValues] = useState<FormValuesT>({});
+export default function CalculationInputTable({
+  id,
+  inputItems,
+  inputsChangedState,
+  updatedInputState,
+}: Props) {
+  const [formValues, setValues] = updatedInputState;
+  const [_inputsChanged, setInputsChanged] = inputsChangedState;
 
   const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = event.target;
     setValues({ ...formValues, [name]: value });
+    setInputsChanged(true);
   };
 
   const handleChangeSelect = (event: SelectChangeEvent<string | number>) => {
     const { name, value } = event.target;
     setValues({ ...formValues, [name]: value });
-  };
-
-  const handleClickUpdate = () => {
-    dispatch(
-      calculationActions.runCalculation({ id: id, inputs: formValues } as CalculationRunDto)
-    );
   };
 
   useEffect(() => {
@@ -142,8 +142,6 @@ export default function CalculationInputTable({ id, inputItems }: Props) {
           </TableBody>
         </Table>
       </TableContainer>
-      <br />
-      <Button onClick={handleClickUpdate}>Update Results</Button>
     </Box>
   );
 }

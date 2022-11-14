@@ -7,14 +7,19 @@ import { store } from "./store";
 
 // TODO: test and configure linebreaks correctly
 (window as any).MathJax = {
-  linebreaks: {
-    // options for when overflow is linebreak
-    inline: true, // true for browser-based breaking of inline equations
-    width: "100%", // a fixed size or a percentage of the container width
-    lineleading: 0.2, // the default lineleading in em units
-    LinebreakVisitor: null, // The LinebreakVisitor to use
+  output: {
+    displayOverflow: "linebreak",
+    linebreaks: {
+      // options for when overflow is linebreak
+      inline: true, // true for browser-based breaking of inline equations
+      width: "100%", // a fixed size or a percentage of the container width
+      lineleading: 0.2, // the default lineleading in em units
+      LinebreakVisitor: null, // The LinebreakVisitor to use
+    },
   },
 };
+
+let mathjaxPromise = Promise.resolve();
 
 (function () {
   var script = document.createElement("script");
@@ -25,7 +30,12 @@ import { store } from "./store";
 
 export const updateMathJax = () => {
   const typeset = (window as any).MathJax.typesetPromise;
-  if (typeof typeset === "function") typeset();
+  if (typeof typeset === "function") {
+    mathjaxPromise = mathjaxPromise
+      .then(() => typeset())
+      .catch((err) => console.log("MathJax typesetting failed: " + err.message));
+  }
+  return mathjaxPromise;
 };
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);

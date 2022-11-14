@@ -72,7 +72,7 @@ export interface BodyText {
 
 export interface BodyHeader {
   value?: string;
-  codeRef?: string; // TODO: implement this/general codeRef in calc report
+  codeRef?: string;
   level?: number;
 }
 

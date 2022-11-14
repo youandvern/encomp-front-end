@@ -7,8 +7,8 @@ import {
 } from "../../reduxSlices/calculation";
 import { useParams } from "react-router-dom";
 import FormPendingSkeleton from "../FormPendingSkeleton";
-import { updateMathJax } from "../..";
 import CalcReport from "../CalcReport";
+import ErrorManager from "../ErrorManager";
 
 // TODO: Improve loading skeleton
 export default function CalculationReportPage() {
@@ -16,12 +16,6 @@ export default function CalculationReportPage() {
   const currentCalculationInfo = useAppSelector(getCurrentCalculation);
   const currentRun = useAppSelector(getCalculationRunResults);
   const calcId = useParams().id;
-
-  // TODO: move into component that actually has math
-  // update mathjax whenever math containing items change
-  useEffect(() => {
-    updateMathJax();
-  }, [currentRun?.items]);
 
   useEffect(() => {
     if (!!calcId) {
@@ -32,5 +26,10 @@ export default function CalculationReportPage() {
     }
   }, [calcId]);
 
-  return calcId !== currentRun?.id ? <FormPendingSkeleton /> : <CalcReport />;
+  return (
+    <>
+      <ErrorManager />
+      {calcId !== currentRun?.id ? <FormPendingSkeleton /> : <CalcReport />}
+    </>
+  );
 }

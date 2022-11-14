@@ -24,7 +24,6 @@ export default function Template({ template }: Props) {
     navigate(routes.templateContent.path(template.id));
   };
 
-  // TODO: calculation reports
   return (
     <Card
       sx={{
