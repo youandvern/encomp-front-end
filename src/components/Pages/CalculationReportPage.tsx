@@ -10,7 +10,7 @@ import FormPendingSkeleton from "../FormPendingSkeleton";
 import CalcReport from "../CalcReport";
 import ErrorManager from "../ErrorManager";
 
-// TODO: Improve loading skeleton
+// TODO: Improve loading skeleton, include text to say loading/preparing calc report or something
 export default function CalculationReportPage() {
   const dispatch = useAppDispatch();
   const currentCalculationInfo = useAppSelector(getCurrentCalculation);

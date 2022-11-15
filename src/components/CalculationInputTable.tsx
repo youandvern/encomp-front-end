@@ -31,8 +31,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-// TODO: fix bug with saving input = 0
-
 const itemToInput = (
   item: DeclareVariable,
   itemValue: number | string | undefined,
@@ -103,7 +101,7 @@ export default function CalculationInputTable({
 
   useEffect(() => {
     const inputObj = inputItems.reduce((obj, item) => {
-      obj[item.name || ""] = item.value || "";
+      obj[item.name == null ? "" : item.name] = item.value == null ? "" : item.value;
       return obj;
     }, {} as FormValuesT);
     setValues(inputObj);

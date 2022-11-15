@@ -5,7 +5,6 @@ import reportWebVitals from "./reportWebVitals";
 import { Provider } from "react-redux";
 import { store } from "./store";
 
-// TODO: test and configure linebreaks correctly
 (window as any).MathJax = {
   output: {
     displayOverflow: "linebreak",
