@@ -6,6 +6,9 @@ import { Provider } from "react-redux";
 import { store } from "./store";
 
 (window as any).MathJax = {
+  // Lazy loading makes printing take a long long time, UX not greatly improved
+  // https://docs.mathjax.org/en/latest/output/lazy.html?highlight=lazy%20loading
+  // loader: { load: ["ui/lazy"] },
   output: {
     displayOverflow: "linebreak",
     linebreaks: {

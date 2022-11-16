@@ -1,18 +1,6 @@
-import { useState } from "react";
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
-  Button,
-  IconButton,
-  Typography,
-} from "@mui/material";
+import { Dialog, DialogContent, DialogActions, Button } from "@mui/material";
 import CalcReport from "./CalcReport";
-import { useLocation, useNavigate } from "react-router-dom";
 import { routes } from "../routes";
-import FormPendingSkeleton from "./FormPendingSkeleton";
 
 interface Props {
   calcId: number;
@@ -23,8 +11,6 @@ interface Props {
 // --> Consider more back end work i.e. BFF for calc report and design page. (one object type rather than FE switch statements)
 export default function CalcReportPreviewDialog({ calcId, openState }: Props) {
   const [open, setOpen] = openState;
-  const navigate = useNavigate();
-  const location = useLocation();
 
   const handleClose = () => {
     setOpen(false);

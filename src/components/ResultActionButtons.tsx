@@ -63,7 +63,7 @@ export default function ResultActionButtons({
             <PreviewIcon />
           </IconButton>
         </Tooltip>
-        <Tooltip title="Open calculation report in new window." placement="top">
+        <Tooltip title="Open or print calculation report in new window." placement="top">
           <IconButton onClick={handleClickOpen} disabled={inputChanged} color="primary">
             <NoteAddIcon />
           </IconButton>

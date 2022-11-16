@@ -70,7 +70,7 @@ export default function CalculationDesignPage() {
         {calcId !== currentRun?.id ? (
           <FormPendingSkeleton />
         ) : (
-          <Stack direction="row" spacing={4}>
+          <Stack direction="row" spacing={4} justifyContent="center">
             <CalculationInputTable
               id={currentRun?.id || currentCalculationInfo?.id || 0}
               inputItems={inputItems}
