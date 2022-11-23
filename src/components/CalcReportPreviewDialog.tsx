@@ -1,6 +1,8 @@
 import { Dialog, DialogContent, DialogActions, Button } from "@mui/material";
 import CalcReport from "./CalcReport";
 import { routes } from "../routes";
+import { useAppSelector } from "../hooks";
+import { getCalculationRunResults } from "../reduxSlices/calculation";
 
 interface Props {
   calcId: number;
@@ -10,6 +12,7 @@ interface Props {
 // TODO: preview calc report takes forever to render
 // --> Consider more back end work i.e. BFF for calc report and design page. (one object type rather than FE switch statements)
 export default function CalcReportPreviewDialog({ calcId, openState }: Props) {
+  const runResults = useAppSelector(getCalculationRunResults)?.items;
   const [open, setOpen] = openState;
 
   const handleClose = () => {
@@ -25,7 +28,7 @@ export default function CalcReportPreviewDialog({ calcId, openState }: Props) {
       aria-label="calculation-report-preview"
     >
       <DialogContent dividers={true}>
-        <CalcReport />
+        <CalcReport runResults={runResults || []} />
       </DialogContent>
       <DialogActions>
         <Button

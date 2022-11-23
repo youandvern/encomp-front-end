@@ -4,6 +4,7 @@ import {
   Assumption,
   BodyHeader,
   BodyText,
+  CalcTypeToParse,
   CalculationTitle,
   CalcVariable,
   CheckVariable,
@@ -55,9 +56,13 @@ const incrementAndGetHeaderCount = (headerCounts: number[], level: number) => {
   return headerCounts;
 };
 
+interface Props {
+  runResults: CalcTypeToParse[];
+}
+
 // TODO: allow calc title in addition to template title in calc report
-export default function CalcReport() {
-  const runResults = useAppSelector(getCalculationRunResults)?.items;
+export default function CalcReport({ runResults }: Props) {
+  // const runResults = useAppSelector(getCalculationRunResults)?.items;
   let headerCounts = [0];
   const [typesetLoading, setTypesetLoading] = useState(true);
 

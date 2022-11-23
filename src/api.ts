@@ -212,6 +212,14 @@ export async function apiDeleteTemplate(id: number): Promise<boolean> {
   }
 }
 
+export async function apiRunTemplate(id: number): Promise<CalculationRunResponse> {
+  const response = await fetch(`${API_BASE_URL}templates/${id}/run/`, {
+    method: "GET",
+    credentials: "include",
+  });
+  return await commonApiReturn(response, `Failed to run template`);
+}
+
 export async function apiUpdateTemplate(template: TemplateT): Promise<TemplateT> {
   const response = await fetch(`${API_BASE_URL}templates/${template.id}/`, {
     method: "PATCH",

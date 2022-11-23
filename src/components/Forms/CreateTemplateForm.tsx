@@ -11,6 +11,7 @@ const defaultValues = {
   fileContent: "",
 };
 
+// TODO: remove initial content, auto-apply starter content
 export default function CreateTemplateForm({ onSubmit }: CreateFormProps) {
   const dispatch = useAppDispatch();
   const [formValues, setValues] = useState(defaultValues);

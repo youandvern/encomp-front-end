@@ -29,7 +29,11 @@ export default function CalculationReportPage() {
   return (
     <>
       <ErrorManager />
-      {calcId !== currentRun?.id ? <FormPendingSkeleton /> : <CalcReport />}
+      {calcId !== currentRun?.id ? (
+        <FormPendingSkeleton />
+      ) : (
+        <CalcReport runResults={currentRun?.items || []} />
+      )}
     </>
   );
 }

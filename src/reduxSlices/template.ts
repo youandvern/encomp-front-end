@@ -1,13 +1,22 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AppDispatch, RootState } from "../store";
-import { apiCreateTemplate, apiDeleteTemplate, apiFetchTemplates, apiUpdateTemplate } from "../api";
+import {
+  apiCreateTemplate,
+  apiDeleteTemplate,
+  apiFetchTemplates,
+  apiRunTemplate,
+  apiUpdateTemplate,
+} from "../api";
 import { errorsActions } from "./errors";
 
 import TemplateT, { TemplateDto } from "../commonTypes/TemplateT";
+import { CalculationRunResponse } from "../commonTypes/CalculationT";
+import { StatusT } from "../commonTypes/StatusT";
 
 export const GET_TEMPLATES = "GET_TEMPLATES";
 export const CREATE_TEMPLATE = "CREATE_TEMPLATE";
 export const DELETE_TEMPLATE = "DELETE_TEMPLATE";
+export const RUN_TEMPLATE = "RUN_TEMPLATE";
 export const UPDATE_TEMPLATE = "UPDATE_TEMPLATE";
 
 ///
@@ -18,12 +27,16 @@ export interface TemplateState {
   currentTemplateId: number | null;
   allTemplates: TemplateT[];
   templateStatus: string;
+  templateRunResults: CalculationRunResponse | null;
+  templateRunStatus: StatusT;
 }
 
 export const initialState: TemplateState = {
   currentTemplateId: null,
   allTemplates: [],
   templateStatus: "idle",
+  templateRunResults: null,
+  templateRunStatus: "idle",
 };
 
 ///
@@ -88,6 +101,15 @@ const updateAndGetTemplate = (template: TemplateT) => async (dispatch: AppDispat
   return await dispatch(templatesActions.fetchTemplates());
 };
 
+const runTemplate = createAsyncThunk(RUN_TEMPLATE, async (id: number, thunkApi) => {
+  try {
+    return await apiRunTemplate(id);
+  } catch (err) {
+    thunkApi.dispatch(errorsActions.throwError(`${err}`));
+    return thunkApi.rejectWithValue(null);
+  }
+});
+
 ///
 /// Slice
 ///
@@ -147,6 +169,16 @@ export const templates = createSlice({
       })
       .addCase(updateTemplate.rejected, (state) => {
         state.templateStatus = "failed";
+      })
+      .addCase(runTemplate.pending, (state) => {
+        state.templateRunStatus = "loading";
+      })
+      .addCase(runTemplate.fulfilled, (state, action) => {
+        state.templateRunStatus = "idle";
+        state.templateRunResults = action.payload;
+      })
+      .addCase(runTemplate.rejected, (state) => {
+        state.templateRunStatus = "failed";
       });
   },
 });
@@ -164,6 +196,8 @@ export const getCurrentTemplate = (state: RootState) =>
     : state.templates.allTemplates.find(
         (template) => template.id === state.templates.currentTemplateId
       );
+export const getTemplateRunResults = (state: RootState) => state.templates.templateRunResults;
+export const getTemplateRunStatus = (state: RootState) => state.templates.templateRunStatus;
 
 export const templatesActions = {
   ...templates.actions,
@@ -171,5 +205,6 @@ export const templatesActions = {
   createAndGetTemplate,
   deleteAndGetTemplate,
   updateAndGetTemplate,
+  runTemplate,
 };
 export default templates.reducer;
