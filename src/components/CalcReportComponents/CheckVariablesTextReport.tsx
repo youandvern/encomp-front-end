@@ -1,17 +1,23 @@
 import { Box } from "@mui/material";
-import { CheckVariablesText } from "../../commonTypes/CalculationRunTypes";
-import { addCodeRef, CalcTypography, CALC_MARGIN, wrapMathEquationString } from "./reportUtilities";
+import { ComparisonForced } from "../../commonTypes/CalculationRunTypes";
+import {
+  addReference,
+  CalcTypography,
+  CALC_MARGIN,
+  wrapMathEquationString,
+} from "./reportUtilities";
 
 interface Props {
-  item: CheckVariablesText;
+  item: ComparisonForced;
 }
 
 export default function CheckVariablesTextReport({ item }: Props) {
   return (
     <Box marginLeft={CALC_MARGIN}>
-      {addCodeRef(
+      {item.description && <CalcTypography marginTop="0.5rem">{item.description}:</CalcTypography>}
+      {addReference(
         <CalcTypography>{wrapMathEquationString(`\\rightarrow ${item.symbolic}`)}</CalcTypography>,
-        item.codeRef
+        item.reference
       )}
     </Box>
   );

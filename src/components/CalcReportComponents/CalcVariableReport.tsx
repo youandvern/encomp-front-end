@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import { CalcVariable } from "../../commonTypes/CalculationRunTypes";
 import {
-  addCodeRef,
+  addReference,
   ALIGN,
   CalcTypography,
   CALC_MARGIN,
@@ -11,10 +11,10 @@ import {
   wrapMathString,
 } from "./reportUtilities";
 
-const composeCalcVariable = (content: JSX.Element, description?: string, codeRef?: string) => (
+const composeCalcVariable = (content: JSX.Element, description?: string, reference?: string) => (
   <Box marginLeft={CALC_MARGIN} marginTop="0.25rem">
     {description && <CalcTypography marginTop="0.5rem">{description}:</CalcTypography>}
-    {addCodeRef(content, codeRef)}
+    {addReference(content, reference)}
   </Box>
 );
 
@@ -39,7 +39,7 @@ const calcVariableToNode = (calc: CalcVariable) => {
       {calc.calcLength === "number" ? wrapMathString(tex) : wrapMathEquationString(tex)}
     </CalcTypography>
   );
-  return composeCalcVariable(node, calc.description, calc.codeRef);
+  return composeCalcVariable(node, calc.description, calc.reference);
 };
 
 interface Props {

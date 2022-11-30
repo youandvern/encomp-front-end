@@ -1,16 +1,16 @@
-import { BodyHeader } from "../../commonTypes/CalculationRunTypes";
-import { addCodeRef, CalcTypography } from "./reportUtilities";
+import { BodyHeading } from "../../commonTypes/CalculationRunTypes";
+import { addReference, CalcTypography } from "./reportUtilities";
 
 interface Props {
-  item: BodyHeader;
+  item: BodyHeading;
   fontSize: string;
-  headerNumber: string;
+  headerNumber?: string;
 }
 export default function BodyHeaderReport({ item, fontSize, headerNumber }: Props) {
-  return addCodeRef(
+  return addReference(
     <CalcTypography variant="h4" marginTop="1.5rem" marginBottom="0.5rem" fontSize={fontSize}>
-      {headerNumber} &nbsp;{item.value}
+      {headerNumber != null ? headerNumber + "\u00A0" : ""} {item.value}
     </CalcTypography>,
-    item.codeRef
+    item.reference
   );
 }

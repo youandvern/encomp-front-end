@@ -5,13 +5,22 @@ import { CreateFormProps } from "../../commonTypes/FormProps";
 import { useAppDispatch } from "../../hooks";
 import { templatesActions } from "../../reduxSlices/template";
 
+const TEMPLATE_STARTER_CODE = `from templates.encomp_utils import *
+
+
+def calculation():
+    # Begin your calculation template here. For example, C=A+B would be:
+    A = Input("A", 1)
+    B = input("B", 1)
+    CalcVariable("C", A+B, result_check=True)
+    `;
+
 const defaultValues = {
   name: "",
   description: "",
-  fileContent: "",
+  fileContent: TEMPLATE_STARTER_CODE,
 };
 
-// TODO: remove initial content, auto-apply starter content
 export default function CreateTemplateForm({ onSubmit }: CreateFormProps) {
   const dispatch = useAppDispatch();
   const [formValues, setValues] = useState(defaultValues);
@@ -50,7 +59,8 @@ export default function CreateTemplateForm({ onSubmit }: CreateFormProps) {
             onChange={handleChange}
             inputProps={{ maxLength: 500 }}
           />
-          <TextField
+          {/* <TextField
+            hidden
             multiline
             id="template-file-content"
             name="fileContent"
@@ -58,7 +68,7 @@ export default function CreateTemplateForm({ onSubmit }: CreateFormProps) {
             value={formValues.fileContent}
             onChange={handleChange}
             inputProps={{ maxLength: 50000 }}
-          />
+          /> */}
           <Button fullWidth type="submit" variant="contained">
             Submit
           </Button>

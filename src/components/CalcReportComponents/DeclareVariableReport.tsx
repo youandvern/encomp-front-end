@@ -1,9 +1,9 @@
 import { Box, Stack } from "@mui/material";
-import { DeclareVariable } from "../../commonTypes/CalculationRunTypes";
+import { InputVariable } from "../../commonTypes/CalculationRunTypes";
 import { CalcTypography, CALC_MARGIN, wrapMathString } from "./reportUtilities";
 
 interface Props {
-  item: DeclareVariable;
+  item: InputVariable;
 }
 
 export default function DeclareVariableReport({ item }: Props) {

@@ -17,7 +17,7 @@ import {
 import React, { ChangeEvent, useEffect } from "react";
 import { styled } from "@mui/system";
 
-import { DeclareVariable } from "../commonTypes/CalculationRunTypes";
+import { InputVariable } from "../commonTypes/CalculationRunTypes";
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   "&:nth-of-type(odd)": {
@@ -32,7 +32,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const itemToInput = (
-  item: DeclareVariable,
+  item: InputVariable,
   itemValue: number | string | undefined,
   handleChange: (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void,
   handleChangeSelect: (event: SelectChangeEvent<string | number>) => void
@@ -45,7 +45,7 @@ const itemToInput = (
       size="small"
       sx={{ minWidth: "10rem", backgroundColor: "white" }}
     >
-      {item.inputOptions?.map((option) => (
+      {item.selectOptions?.map((option) => (
         <MenuItem value={option}>{option}</MenuItem>
       ))}
     </Select>
@@ -74,7 +74,7 @@ export interface FormValuesT {
 
 interface Props {
   id: number;
-  inputItems: DeclareVariable[];
+  inputItems: InputVariable[];
   updatedInputState: [FormValuesT, React.Dispatch<React.SetStateAction<FormValuesT>>];
   inputsChangedState: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
 }

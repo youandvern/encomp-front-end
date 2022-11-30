@@ -5,8 +5,8 @@ import React from "react";
 import {
   CalcTypeToParse,
   CalcVariable,
-  CheckVariable,
-  CheckVariablesText,
+  Comparison,
+  ComparisonForced,
 } from "../commonTypes/CalculationRunTypes";
 import { useAppSelector } from "../hooks";
 import { getCalculationRunStatus } from "../reduxSlices/calculation";
@@ -42,7 +42,7 @@ export default function CalculationResultsView({
           runLoading={runStatus === "loading" || false}
         />
       </Stack>
-      <Box sx={{ position: "relative" }}>
+      <Box minHeight="10rem" sx={{ position: "relative" }}>
         {resultItems.map((item, index) => {
           switch (item.type) {
             case "CalcVariable":
@@ -67,7 +67,7 @@ export default function CalculationResultsView({
                 </Box>
               );
             case "CheckVariable":
-              const check = item as CheckVariable;
+              const check = item as Comparison;
               return (
                 <Box
                   key={"calc-description-box-" + index}
@@ -99,7 +99,7 @@ export default function CalculationResultsView({
                 </Box>
               );
             case "CheckVariablesText":
-              const textcheck = item as CheckVariablesText;
+              const textcheck = item as ComparisonForced;
               return (
                 <Box
                   key={"calc-description-box-" + index}

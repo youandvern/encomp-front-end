@@ -1,6 +1,6 @@
 import { Typography, Stack } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { CalcTypeToParse, DeclareVariable } from "../../commonTypes/CalculationRunTypes";
+import { CalcTypeToParse, InputVariable } from "../../commonTypes/CalculationRunTypes";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import {
   calculationActions,
@@ -20,7 +20,7 @@ export default function CalculationDesignPage() {
   const currentRun = useAppSelector(getCalculationRunResults);
   const calcId = useParams().id;
 
-  const [inputItems, setInputItems] = useState<DeclareVariable[]>([]);
+  const [inputItems, setInputItems] = useState<InputVariable[]>([]);
   const [resultItems, setResultItems] = useState<CalcTypeToParse[]>([]);
   const updatedInputState = useState<FormValuesT>({});
   const inputsChangedState = useState(false);
@@ -40,17 +40,17 @@ export default function CalculationDesignPage() {
   }, [calcId]);
 
   useEffect(() => {
-    const inputItemList: DeclareVariable[] = [];
+    const inputItemList: InputVariable[] = [];
     const resultItemList: CalcTypeToParse[] = [];
 
     currentRun?.items.forEach((item) => {
       switch (item.type) {
-        case "DeclareVariable":
-          inputItemList.push(item as DeclareVariable);
+        case "Input":
+          inputItemList.push(item as InputVariable);
           break;
-        case "CalcVariable":
-        case "CheckVariable":
-        case "CheckVariablesText":
+        case "Calculation":
+        case "Comparison":
+        case "ComparisonForced":
           if (!!item.finalResult) resultItemList.push(item);
           break;
         default:

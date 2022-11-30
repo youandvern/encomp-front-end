@@ -1,5 +1,6 @@
+import { Stack } from "@mui/material";
 import { Assumption } from "../../commonTypes/CalculationRunTypes";
-import { CalcTypography } from "./reportUtilities";
+import { CalcTypography, CALC_MARGIN } from "./reportUtilities";
 
 interface Props {
   item: Assumption;
@@ -7,9 +8,11 @@ interface Props {
 
 export default function AssumptionReport({ item }: Props) {
   return (
-    <CalcTypography>
-      <CalcTypography variant="overline">{"[ASSUME] "}</CalcTypography>
-      {item.value}
-    </CalcTypography>
+    <Stack direction="row" alignItems="baseline" marginLeft={CALC_MARGIN}>
+      <CalcTypography variant="overline" paddingRight="0.5em">
+        {"[ASSUME]"}
+      </CalcTypography>
+      <CalcTypography>{item.value}</CalcTypography>
+    </Stack>
   );
 }

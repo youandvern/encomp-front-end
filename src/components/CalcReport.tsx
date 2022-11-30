@@ -1,21 +1,17 @@
 import { Box } from "@mui/material";
-import { useAppSelector } from "../hooks";
 import {
   Assumption,
-  BodyHeader,
-  BodyText,
+  BodyHeading,
+  TextBlock,
   CalcTypeToParse,
   CalculationTitle,
   CalcVariable,
-  CheckVariable,
-  CheckVariablesText,
-  DeclareVariable,
-  DescriptionHead,
+  Comparison,
+  ComparisonForced,
+  InputVariable,
 } from "../commonTypes/CalculationRunTypes";
-import { getCalculationRunResults } from "../reduxSlices/calculation";
 import BodyTextReport from "./CalcReportComponents/BodyTextReport";
 import CalcTitleReport from "./CalcReportComponents/CalcTitleReport";
-import DescriptionHeadReport from "./CalcReportComponents/DescriptionHeadReport";
 import AssumptionReport from "./CalcReportComponents/AssumptionReport";
 import DeclareVariableReport from "./CalcReportComponents/DeclareVariableReport";
 import BodyHeaderReport from "./CalcReportComponents/BodyHeaderReport";
@@ -84,7 +80,7 @@ export default function CalcReport({ runResults }: Props) {
       {runResults &&
         runResults.map((item, index) => {
           switch (item.type) {
-            case "CalculationTitle":
+            case "Title":
               return (
                 <CalcTitleReport
                   item={item as CalculationTitle}
@@ -92,22 +88,18 @@ export default function CalcReport({ runResults }: Props) {
                   key={getCalcKey(index)}
                 />
               );
-            case "DescriptionHead":
-              return (
-                <DescriptionHeadReport item={item as DescriptionHead} key={getCalcKey(index)} />
-              );
             case "Assumption":
               return <AssumptionReport item={item as Assumption} key={getCalcKey(index)} />;
-            case "DeclareVariable":
-              return (
-                <DeclareVariableReport item={item as DeclareVariable} key={getCalcKey(index)} />
-              );
-            case "BodyHeader":
-              const parsedBH = item as BodyHeader;
+            case "Input":
+              return <DeclareVariableReport item={item as InputVariable} key={getCalcKey(index)} />;
+            case "Heading":
+              const parsedBH = item as BodyHeading;
               const levelNum = parsedBH.level || 0;
-              headerCounts = incrementAndGetHeaderCount(headerCounts, levelNum);
+              headerCounts = item.numbered
+                ? incrementAndGetHeaderCount(headerCounts, levelNum)
+                : headerCounts;
+              const headerNumber = item.numbered ? headerCounts.join(".") + "." : undefined;
               const fontSize = getFontSizeForHeadLevel(levelNum);
-              const headerNumber = headerCounts.join(".") + ".";
               return (
                 <BodyHeaderReport
                   item={parsedBH}
@@ -116,18 +108,15 @@ export default function CalcReport({ runResults }: Props) {
                   key={getCalcKey(index)}
                 />
               );
-            case "BodyText":
-              return <BodyTextReport item={item as BodyText} key={getCalcKey(index)} />;
-            case "CalcVariable":
+            case "TextBlock":
+              return <BodyTextReport item={item as TextBlock} key={getCalcKey(index)} />;
+            case "Calculation":
               return <CalcVariableReport item={item as CalcVariable} key={getCalcKey(index)} />;
-            case "CheckVariable":
-              return <CheckVariableReport item={item as CheckVariable} key={getCalcKey(index)} />;
-            case "CheckVariablesText":
+            case "Comparison":
+              return <CheckVariableReport item={item as Comparison} key={getCalcKey(index)} />;
+            case "ComparisonForced":
               return (
-                <CheckVariablesTextReport
-                  item={item as CheckVariablesText}
-                  key={getCalcKey(index)}
-                />
+                <CheckVariablesTextReport item={item as ComparisonForced} key={getCalcKey(index)} />
               );
             default:
               return null;

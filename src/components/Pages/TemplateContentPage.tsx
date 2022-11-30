@@ -13,6 +13,7 @@ import {
   templatesActions,
 } from "../../reduxSlices/template";
 import CalcReport from "../CalcReport";
+import DraggableDivider from "../DraggableDivider";
 
 const LOADING_TEXT = "Loading....";
 
@@ -28,9 +29,14 @@ export default function TemplateContentPage() {
   });
   const [displayContent, setDisplay] = useState(LOADING_TEXT);
   const [darkMode, setDarkMode] = useState(true);
+  const [previewCalc, setPreviewCalc] = useState(true);
 
   const handleSwitchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setDarkMode(event.target.checked);
+  };
+
+  const handleSwitchChangePreview = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setPreviewCalc(event.target.checked);
   };
 
   const handleContentChange = (
@@ -73,6 +79,16 @@ export default function TemplateContentPage() {
     }
   }, [templateId]);
 
+  const TemplateEditor = (
+    <Editor
+      height="90vh"
+      defaultLanguage="python"
+      defaultValue={displayContent}
+      onChange={handleContentChange}
+      theme={darkMode ? "vs-dark" : "light"}
+    />
+  );
+
   return (
     <>
       <Stack direction="row" padding="0.5rem">
@@ -90,27 +106,35 @@ export default function TemplateContentPage() {
           label="Dark Mode"
         />
 
+        <FormControlLabel
+          control={
+            <Switch
+              checked={previewCalc}
+              onChange={handleSwitchChangePreview}
+              inputProps={{ "aria-label": "preview-calculation-switch" }}
+            />
+          }
+          label="Preview Calculation"
+        />
+
         <Button type="button" variant="contained" onClick={updateContent}>
           Save Changes
         </Button>
       </Stack>
-
-      <Stack direction="row">
-        {displayContent === LOADING_TEXT ? (
-          <h3>{LOADING_TEXT}</h3>
-        ) : (
-          <Editor
-            height="90vh"
-            defaultLanguage="python"
-            defaultValue={displayContent}
-            onChange={handleContentChange}
-            theme={darkMode ? "vs-dark" : "light"}
-          />
-        )}
-        <Paper sx={{ height: "90vh", overflow: "auto", marginLeft: "0.5rem", maxWidth: "40vw" }}>
-          <CalcReport runResults={currentTemplateRun?.items || []} />
-        </Paper>
-      </Stack>
+      {previewCalc ? (
+        <DraggableDivider
+          leftChild={displayContent === LOADING_TEXT ? <h3>{LOADING_TEXT}</h3> : TemplateEditor}
+          rightChild={
+            <Paper
+              sx={{ height: "90vh", overflow: "auto", marginLeft: "0.5rem", maxWidth: "40vw" }}
+            >
+              <CalcReport runResults={currentTemplateRun?.items || []} />
+            </Paper>
+          }
+        />
+      ) : (
+        TemplateEditor
+      )}
     </>
   );
 }

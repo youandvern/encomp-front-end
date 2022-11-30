@@ -7,27 +7,23 @@ export interface CalculationTitle {
   value?: string;
 }
 
-export interface DescriptionHead {
-  value?: string;
-}
-
 export interface Assumption {
   value?: string;
 }
 
 export type InputT = "number" | "select" | "text";
 
-export interface DeclareVariable {
+export interface InputVariable {
   value?: number | string;
   name?: string;
   unit?: string;
   description?: string;
-  codeRef?: string;
+  reference?: string;
   inputType?: InputT;
   numStep?: number | "any" | null;
   minValue?: number | null;
   maxValue?: number | null;
-  inputOptions?: string[] | number[] | null;
+  selectOptions?: string[] | number[] | null;
   tex?: string;
 }
 
@@ -36,7 +32,7 @@ export interface CalcVariable {
   name?: string;
   unit?: string;
   description?: string;
-  codeRef?: string;
+  reference?: string;
   finalResult?: boolean;
   calcLength?: "long" | "number" | "short";
   symbolic?: string;
@@ -45,35 +41,36 @@ export interface CalcVariable {
   error?: string | null;
 }
 
-export interface CheckVariable {
+export interface Comparison {
   value?: boolean;
   resultMessage?: string;
   unit?: string;
   description?: string;
-  codeRef?: string;
+  reference?: string;
   finalResult?: boolean; // rename finalResult
   symbolic?: string;
   substituted?: string;
   resultWithUnit?: string;
 }
 
-export interface CheckVariablesText {
+export interface ComparisonForced {
   unit?: string;
   description?: string;
-  codeRef?: string;
+  reference?: string;
   finalResult?: boolean;
   symbolic?: string;
 }
 
-export interface BodyText {
+export interface TextBlock {
   value?: string;
-  codeRef?: string;
+  reference?: string;
 }
 
-export interface BodyHeader {
+export interface BodyHeading {
   value?: string;
-  codeRef?: string;
+  reference?: string;
   level?: number;
+  numbered?: boolean;
 }
 
 // TODO: Declare and Calc tables
