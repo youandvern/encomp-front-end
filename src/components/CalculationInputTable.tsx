@@ -97,6 +97,7 @@ export default function CalculationInputTable({
   const handleChangeSelect = (event: SelectChangeEvent<string | number>) => {
     const { name, value } = event.target;
     setValues({ ...formValues, [name]: value });
+    setInputsChanged(true);
   };
 
   useEffect(() => {
@@ -133,7 +134,12 @@ export default function CalculationInputTable({
                 <TableCell key={"input-desc" + index}>{item.description}</TableCell>
                 <TableCell key={"input-name" + index}>{`\\(${item.name}\\)`}</TableCell>
                 <TableCell key={"input-value" + index}>
-                  {itemToInput(item, formValues[item.name || ""], handleChange, handleChangeSelect)}
+                  {itemToInput(
+                    item,
+                    formValues[item.name || ""] || item.value,
+                    handleChange,
+                    handleChangeSelect
+                  )}
                 </TableCell>
               </StyledTableRow>
             ))}

@@ -12,9 +12,10 @@ import { useAppSelector } from "../hooks";
 import { getCalculationRunStatus } from "../reduxSlices/calculation";
 import ResultActionButtons from "./ResultActionButtons";
 import { FormValuesT } from "./CalculationInputTable";
+import { updateMathJax } from "..";
 
-// TODO: check tooltip should show var descriptions and substituted (separate lines)
-// TODO: no mathjax on tooltip
+// TODO: updating select element does not count as dirty input
+// TODO: check tooltip should show var descriptions
 interface Props {
   id: number;
   resultItems: CalcTypeToParse[];
@@ -45,7 +46,7 @@ export default function CalculationResultsView({
       <Box minHeight="10rem" sx={{ position: "relative" }}>
         {resultItems.map((item, index) => {
           switch (item.type) {
-            case "CalcVariable":
+            case "Calculation":
               const parsedCalc = item as CalcVariable;
               return (
                 <Box
@@ -66,7 +67,7 @@ export default function CalculationResultsView({
                   </Typography>
                 </Box>
               );
-            case "CheckVariable":
+            case "Comparison":
               const check = item as Comparison;
               return (
                 <Box
@@ -84,7 +85,18 @@ export default function CalculationResultsView({
                     borderRadius: "1rem",
                   }}
                 >
-                  <Tooltip title={`\\(${check.substituted}\\)` || "Check Results"}>
+                  <Tooltip
+                    title={
+                      check.substituted
+                        ? `${check.description} \n \\( \\begin{align} ${check.substituted} \\end{align}\\)`
+                        : "Check Results"
+                    }
+                    onOpen={() => {
+                      setTimeout(() => {
+                        updateMathJax();
+                      }, 25);
+                    }}
+                  >
                     <Typography
                       key={`check-${index}`}
                       display="flex"
@@ -98,7 +110,7 @@ export default function CalculationResultsView({
                   </Tooltip>
                 </Box>
               );
-            case "CheckVariablesText":
+            case "ComparisonForced":
               const textcheck = item as ComparisonForced;
               return (
                 <Box
@@ -112,7 +124,14 @@ export default function CalculationResultsView({
                     borderRadius: "1rem",
                   }}
                 >
-                  <Tooltip title={textcheck.description || "Check Results"}>
+                  <Tooltip
+                    title={textcheck.description || "Check Results"}
+                    onOpen={() => {
+                      setTimeout(() => {
+                        updateMathJax();
+                      }, 25);
+                    }}
+                  >
                     <Typography
                       key={`textcheck-${index}`}
                       display="flex"

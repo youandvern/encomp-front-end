@@ -71,6 +71,8 @@ export const GLOBAL_THEME = createTheme({
   },
 });
 
+// TODO: add contact/feedback form/page with captcha
+// TODO: add email verification
 // TODO: update error page
 const router = createBrowserRouter([
   {
