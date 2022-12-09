@@ -6,6 +6,7 @@ import CalculationT, {
   CalculationRunDto,
   CalculationRunResponse,
 } from "./commonTypes/CalculationT";
+import { ContactDto } from "./commonTypes/ContactT";
 import ProjectT, { ProjectDto } from "./commonTypes/ProjectT";
 import TemplateT, { TemplateContentDto, TemplateDto } from "./commonTypes/TemplateT";
 import User, { UserLoginDto, UserRegisterDto } from "./commonTypes/UserT";
@@ -56,6 +57,15 @@ async function commonApiReturn(response: Response, failMessage: string) {
     return await response.json();
   } else {
     return Promise.reject(rejectMessage(response, failMessage));
+  }
+}
+
+async function errorApiReturn(response: Response) {
+  const data = await response.json();
+  if (response.ok) {
+    return data;
+  } else {
+    return Promise.reject(rejectMessage(response, data["detail"]));
   }
 }
 
@@ -115,6 +125,25 @@ export async function apiUpdateCalculation(
     credentials: "include",
   });
   return await commonApiReturn(response, `Failed to update project ${calculation.name}`);
+}
+
+///
+/// Contact
+///
+
+export async function apiContact(contactDto: ContactDto): Promise<string> {
+  const response = await fetch(API_BASE_URL + "contact/", {
+    method: "POST",
+    body: JSON.stringify(contactDto),
+    headers: getCommonPostHeaders(),
+    // credentials: "include",
+  });
+  if (response.ok) {
+    const data = await response.json();
+    return data;
+  } else {
+    return Promise.reject(rejectMessage(response, "Failed to submit contact request"));
+  }
 }
 
 ///
@@ -184,7 +213,7 @@ export async function apiUpdateTemplateContent(updateDto: TemplateContentDto): P
     headers: getPostHeadersWithCsrf(),
     credentials: "include",
   });
-  return await commonApiReturn(response, "Failed to update template content");
+  return await errorApiReturn(response);
 }
 
 export async function apiCreateTemplate(templateDto: TemplateDto): Promise<TemplateT> {
@@ -217,7 +246,7 @@ export async function apiRunTemplate(id: number): Promise<CalculationRunResponse
     method: "GET",
     credentials: "include",
   });
-  return await commonApiReturn(response, `Failed to run template`);
+  return await errorApiReturn(response);
 }
 
 export async function apiUpdateTemplate(template: TemplateT): Promise<TemplateT> {

@@ -6,10 +6,11 @@ import {
   apiFetchTemplates,
   apiRunTemplate,
   apiUpdateTemplate,
+  apiUpdateTemplateContent,
 } from "../api";
 import { errorsActions } from "./errors";
 
-import TemplateT, { TemplateDto } from "../commonTypes/TemplateT";
+import TemplateT, { TemplateContentDto, TemplateDto } from "../commonTypes/TemplateT";
 import { CalculationRunResponse } from "../commonTypes/CalculationT";
 import { StatusT } from "../commonTypes/StatusT";
 
@@ -18,6 +19,7 @@ export const CREATE_TEMPLATE = "CREATE_TEMPLATE";
 export const DELETE_TEMPLATE = "DELETE_TEMPLATE";
 export const RUN_TEMPLATE = "RUN_TEMPLATE";
 export const UPDATE_TEMPLATE = "UPDATE_TEMPLATE";
+export const UPDATE_TEMPLATE_CONTENT = "UPDATE_TEMPLATE_CONTENT";
 
 ///
 /// State
@@ -29,6 +31,7 @@ export interface TemplateState {
   templateStatus: string;
   templateRunResults: CalculationRunResponse | null;
   templateRunStatus: StatusT;
+  templateError: string;
 }
 
 export const initialState: TemplateState = {
@@ -37,6 +40,7 @@ export const initialState: TemplateState = {
   templateStatus: "idle",
   templateRunResults: null,
   templateRunStatus: "idle",
+  templateError: "",
 };
 
 ///
@@ -100,6 +104,20 @@ const updateAndGetTemplate = (template: TemplateT) => async (dispatch: AppDispat
   await dispatch(updateTemplate(template));
   return await dispatch(templatesActions.fetchTemplates());
 };
+
+const updateTemplateContent = createAsyncThunk(
+  UPDATE_TEMPLATE_CONTENT,
+  async (content: TemplateContentDto, thunkApi) => {
+    try {
+      await apiUpdateTemplateContent(content);
+      await runTemplate(content.id);
+      return "success";
+    } catch (err) {
+      thunkApi.dispatch(errorsActions.throwError(`${err}`));
+      return thunkApi.rejectWithValue(`${err}`);
+    }
+  }
+);
 
 const runTemplate = createAsyncThunk(RUN_TEMPLATE, async (id: number, thunkApi) => {
   try {
@@ -170,6 +188,17 @@ export const templates = createSlice({
       .addCase(updateTemplate.rejected, (state) => {
         state.templateStatus = "failed";
       })
+      .addCase(updateTemplateContent.fulfilled, (state) => {
+        state.templateStatus = "idle";
+        state.templateError = "";
+      })
+      .addCase(updateTemplateContent.pending, (state) => {
+        state.templateStatus = "loading";
+      })
+      .addCase(updateTemplateContent.rejected, (state, action) => {
+        state.templateStatus = "failed";
+        state.templateError = action.payload as string;
+      })
       .addCase(runTemplate.pending, (state) => {
         state.templateRunStatus = "loading";
       })
@@ -189,6 +218,7 @@ export const templates = createSlice({
 
 export const getTemplates = (state: RootState) => state.templates.allTemplates;
 export const getTemplatesStatus = (state: RootState) => state.templates.templateStatus;
+export const getTemplateError = (state: RootState) => state.templates.templateError;
 export const getCurrentTemplateId = (state: RootState) => state.templates.currentTemplateId;
 export const getCurrentTemplate = (state: RootState) =>
   state.templates.currentTemplateId === null
@@ -205,6 +235,7 @@ export const templatesActions = {
   createAndGetTemplate,
   deleteAndGetTemplate,
   updateAndGetTemplate,
+  updateTemplateContent,
   runTemplate,
 };
 export default templates.reducer;

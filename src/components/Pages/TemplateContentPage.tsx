@@ -1,4 +1,5 @@
 import { Button, Typography, FormControlLabel, Paper, Stack, Switch } from "@mui/material";
+import { styled } from "@mui/material/styles";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Editor from "@monaco-editor/react";
@@ -9,6 +10,7 @@ import { useAppDispatch, useAppSelector } from "../../hooks";
 import { errorsActions } from "../../reduxSlices/errors";
 import {
   getCurrentTemplate,
+  getTemplateError,
   getTemplateRunResults,
   templatesActions,
 } from "../../reduxSlices/template";
@@ -17,9 +19,18 @@ import DraggableDivider from "../DraggableDivider";
 
 const LOADING_TEXT = "Loading....";
 
+const ErrorDiv = styled("div")(({ theme }) => ({
+  marginBlock: "1rem",
+  backgroundColor: theme.palette.error.light,
+  padding: "0.5rem",
+  maxWidth: theme.breakpoints.values.lg,
+  borderRadius: theme.shape.borderRadius,
+}));
+
 export default function TemplateContentPage() {
   const currentTemplate = useAppSelector(getCurrentTemplate);
   const currentTemplateRun = useAppSelector(getTemplateRunResults);
+  const currentError = useAppSelector(getTemplateError);
   const dispatch = useAppDispatch();
   const templateId = Number(useParams().id);
 
@@ -52,9 +63,7 @@ export default function TemplateContentPage() {
   };
 
   const updateContent = () => {
-    apiUpdateTemplateContent(content)
-      .then(() => dispatch(templatesActions.runTemplate(templateId)))
-      .catch((err) => dispatch(errorsActions.throwError(err)));
+    dispatch(templatesActions.updateTemplateContent(content));
   };
 
   // Fetch all required data if not already in store i.e. direct page load
@@ -121,6 +130,16 @@ export default function TemplateContentPage() {
           Save Changes
         </Button>
       </Stack>
+
+      {currentError && (
+        <ErrorDiv>
+          <Typography variant="h4" color={(theme) => theme.palette.error.dark}>
+            Current Error:
+          </Typography>
+          <Typography>{currentError}</Typography>
+        </ErrorDiv>
+      )}
+
       {previewCalc ? (
         <DraggableDivider
           leftChild={displayContent === LOADING_TEXT ? <h3>{LOADING_TEXT}</h3> : TemplateEditor}

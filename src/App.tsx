@@ -71,8 +71,11 @@ export const GLOBAL_THEME = createTheme({
   },
 });
 
-// TODO: add contact/feedback form/page with captcha
-// TODO: add email verification
+// TODO: add about page
+// TODO: Add getting started tutorial
+// TODO: add example calcs and tutorial video
+// TODO: add captcha to contact form?
+// TODO: add email verification/confirmation
 // TODO: update error page
 const router = createBrowserRouter([
   {

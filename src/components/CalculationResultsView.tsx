@@ -14,8 +14,6 @@ import ResultActionButtons from "./ResultActionButtons";
 import { FormValuesT } from "./CalculationInputTable";
 import { updateMathJax } from "..";
 
-// TODO: updating select element does not count as dirty input
-// TODO: check tooltip should show var descriptions
 interface Props {
   id: number;
   resultItems: CalcTypeToParse[];

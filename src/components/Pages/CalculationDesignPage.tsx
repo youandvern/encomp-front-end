@@ -1,5 +1,5 @@
 import { Typography, Stack } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { CalcTypeToParse, InputVariable } from "../../commonTypes/CalculationRunTypes";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import {
