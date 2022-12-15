@@ -6,7 +6,6 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
-import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import { routes, RouteT } from "../routes";
@@ -22,6 +21,49 @@ import { GLOBAL_THEME } from "../App";
 const NavBarLink = styled(NavLink)({
   textDecoration: "none",
 });
+
+const NavBarHref = styled("a")({
+  textDecoration: "none",
+});
+
+const MakeNaveLink = (
+  route: RouteT,
+  currentPath: string,
+  handleCloseIconMenu: () => void,
+  calcId?: number,
+  templateId?: number | null
+) =>
+  route.external ? (
+    <NavBarHref href={route.path()} target="_blank" rel="noopener noreferrer">
+      {NavButton(route, currentPath, false, handleCloseIconMenu)}
+    </NavBarHref>
+  ) : (
+    <NavBarLink key={"menu-link-" + route.path()} to={getPath(route, calcId, templateId)}>
+      {({ isActive }) => NavButton(route, currentPath, isActive, handleCloseIconMenu)}
+    </NavBarLink>
+  );
+
+const NavButton = (
+  route: RouteT,
+  currentPath: string,
+  isActive: boolean,
+  handleCloseIconMenu: () => void
+) => (
+  <Button
+    onClick={handleCloseIconMenu}
+    sx={{
+      my: 2,
+      color:
+        isActive && (route.path() !== "/" || currentPath === "/")
+          ? GLOBAL_THEME.palette.secondary.main
+          : "white",
+      display: "block",
+      fontWeight: "bold",
+    }}
+  >
+    {route.display}
+  </Button>
+);
 
 const shouldDisplay = (
   route: RouteT,
@@ -148,29 +190,15 @@ export default function NavBar() {
             .filter((route) =>
               shouldDisplay(route, isLoggedIn, isTemplateSelected, isCalcRunReceived)
             )
-            .map((route) => (
-              <NavBarLink
-                key={"menu-link-" + route.path()}
-                to={getPath(route, currentCalcRun?.id, currentTemplateId)}
-              >
-                {({ isActive }) => (
-                  <Button
-                    onClick={handleCloseIconMenu}
-                    sx={{
-                      my: 2,
-                      color:
-                        isActive && (route.path() !== "/" || currentPath === "/")
-                          ? GLOBAL_THEME.palette.secondary.main
-                          : "white",
-                      display: "block",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    {route.display}
-                  </Button>
-                )}
-              </NavBarLink>
-            ))}
+            .map((route) =>
+              MakeNaveLink(
+                route,
+                currentPath,
+                handleCloseIconMenu,
+                currentCalcRun?.id,
+                currentTemplateId
+              )
+            )}
         </Box>
         <Box sx={{ flexGrow: 0 }}>
           <NavBarUser />

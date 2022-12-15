@@ -98,11 +98,11 @@ export default function ContactFormButton() {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">Contact & Feedback</DialogTitle>
+        <DialogTitle id="alert-dialog-title">Contact Us!</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            We welcome any and all feedback including feature requests, problems you are having,
-            things you love, etc. We'll get back to you as soon as we see your message!
+            We welcome any feedback including feature requests, problems you have using the app,
+            things you love, etc. We'll get back to you as soon as we see your message.
           </DialogContentText>
           <br />
           <Typography color={(theme) => theme.palette.error.dark}>{errorMessage}</Typography>

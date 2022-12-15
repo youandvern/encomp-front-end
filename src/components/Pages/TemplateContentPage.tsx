@@ -63,7 +63,7 @@ export default function TemplateContentPage() {
   };
 
   const updateContent = () => {
-    dispatch(templatesActions.updateTemplateContent(content));
+    dispatch(templatesActions.updateAndRunContent(content));
   };
 
   // Fetch all required data if not already in store i.e. direct page load

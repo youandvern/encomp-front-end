@@ -110,7 +110,6 @@ const updateTemplateContent = createAsyncThunk(
   async (content: TemplateContentDto, thunkApi) => {
     try {
       await apiUpdateTemplateContent(content);
-      await runTemplate(content.id);
       return "success";
     } catch (err) {
       thunkApi.dispatch(errorsActions.throwError(`${err}`));
@@ -127,6 +126,11 @@ const runTemplate = createAsyncThunk(RUN_TEMPLATE, async (id: number, thunkApi) 
     return thunkApi.rejectWithValue(null);
   }
 });
+
+const updateAndRunContent = (content: TemplateContentDto) => async (dispatch: AppDispatch) => {
+  await dispatch(updateTemplateContent(content));
+  return await dispatch(templatesActions.runTemplate(content.id));
+};
 
 ///
 /// Slice
@@ -235,7 +239,7 @@ export const templatesActions = {
   createAndGetTemplate,
   deleteAndGetTemplate,
   updateAndGetTemplate,
-  updateTemplateContent,
+  updateAndRunContent,
   runTemplate,
 };
 export default templates.reducer;

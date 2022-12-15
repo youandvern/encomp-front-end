@@ -5,14 +5,16 @@ import { CreateFormProps } from "../../commonTypes/FormProps";
 import { useAppDispatch } from "../../hooks";
 import { templatesActions } from "../../reduxSlices/template";
 
+// TODO: calc report preview not refreshing on save
+// TODO: capture ctrl + s to click save button
 const TEMPLATE_STARTER_CODE = `from templates.encomp_utils import *
 
 
 def calculation():
     # Begin your calculation template here. For example, C=A+B would be:
     A = Input("A", 1)
-    B = input("B", 1)
-    CalcVariable("C", A+B, result_check=True)
+    B = Input("B", 1)
+    Calculation("C", A+B, result_check=True)
     `;
 
 const defaultValues = {

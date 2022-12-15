@@ -5,12 +5,14 @@ export interface RouteT {
   appendIdType: "none" | "calculation" | "template" | "calculationReport";
   requireLogin: boolean;
   onlyLoggedOut: boolean;
+  external?: boolean;
   requireSelectedTemplate?: boolean;
   requireCalcRunResults?: boolean;
 }
 
 type routeKeys =
   | "home"
+  | "documentation"
   | "login"
   | "register"
   | "projects"
@@ -24,6 +26,15 @@ export const routes: Record<routeKeys, RouteT> = {
     display: "Home",
     path: () => "/",
     description: "The home page",
+    appendIdType: "none",
+    requireLogin: false,
+    onlyLoggedOut: false,
+  },
+  documentation: {
+    display: "Documentation",
+    path: () => "https://docs.encompapp.com/",
+    description: "The documentation site",
+    external: true,
     appendIdType: "none",
     requireLogin: false,
     onlyLoggedOut: false,
