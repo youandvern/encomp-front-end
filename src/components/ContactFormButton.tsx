@@ -53,7 +53,11 @@ const Transition = React.forwardRef(function Transition(
   return <Grow ref={ref} {...props} />;
 });
 
-export default function ContactFormButton() {
+interface Props {
+  inline?: boolean;
+}
+
+export default function ContactFormButton({ inline }: Props) {
   const [openAlert, setOpenAlert] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<SubmitStatusT>("initial");
   const [errorMessage, setErrorMessage] = useState("");
@@ -130,9 +134,9 @@ export default function ContactFormButton() {
       </Dialog>
       <Tooltip title="Contact/Feedback">
         <IconButton
-          color="primary"
+          color={inline ? "inherit" : "primary"}
           size="medium"
-          sx={{ position: "fixed", top: "6rem", right: "2rem" }}
+          sx={inline ? {} : { position: "fixed", top: "6rem", right: "2rem" }}
           onClick={handleClickOpen}
         >
           <RateReviewIcon fontSize="large" />
