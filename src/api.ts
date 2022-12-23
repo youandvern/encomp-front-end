@@ -14,8 +14,8 @@ import User, { UserLoginDto, UserRegisterDto } from "./commonTypes/UserT";
 ///
 /// Switch for production deployment
 ///
-export const API_BASE_URL = "http://localhost:8000/api/"; // development
-// export const API_BASE_URL = "http://localhost:8000/api/"; // production
+// export const API_BASE_URL = "http://localhost:8000/api/"; // development
+export const API_BASE_URL = "https://api.encompapp.com/api/"; // production
 
 ///
 /// Common Utilities
