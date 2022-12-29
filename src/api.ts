@@ -1,5 +1,4 @@
 import Cookies from "js-cookie";
-import { CalcTypeToParse } from "./commonTypes/CalculationRunTypes";
 import CalculationT, {
   CalculationDto,
   CalculationForProjectT,
