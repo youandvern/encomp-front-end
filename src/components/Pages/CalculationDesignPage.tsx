@@ -63,14 +63,14 @@ export default function CalculationDesignPage() {
 
   return (
     <>
-      <Stack>
+      <Stack marginTop="1rem">
         <Typography variant="h2" align="center" gutterBottom>
           {currentCalculationInfo?.name}
         </Typography>
         {calcId !== currentRun?.id ? (
           <FormPendingSkeleton />
         ) : (
-          <Stack direction="row" spacing={4} justifyContent="center">
+          <Stack direction={{ xs: "column", md: "row" }} spacing={4} justifyContent="center">
             <CalculationInputTable
               id={currentRun?.id || currentCalculationInfo?.id || 0}
               inputItems={inputItems}

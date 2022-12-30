@@ -1,10 +1,10 @@
-import { Button, Typography, FormControlLabel, Paper, Stack, Switch } from "@mui/material";
+import { Box, Button, Typography, FormControlLabel, Paper, Stack, Switch } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Editor from "@monaco-editor/react";
 import monaco from "monaco-editor";
-import { apiFetchTemplateContent, apiUpdateTemplateContent } from "../../api";
+import { apiFetchTemplateContent } from "../../api";
 import { TemplateContentDto } from "../../commonTypes/TemplateT";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { errorsActions } from "../../reduxSlices/errors";
@@ -25,6 +25,20 @@ const ErrorDiv = styled("div")(({ theme }) => ({
   padding: "0.5rem",
   maxWidth: theme.breakpoints.values.lg,
   borderRadius: theme.shape.borderRadius,
+}));
+
+// sx={{ height: "90vh", overflow: "auto", marginLeft: "0.5rem", maxWidth: "40vw" }}
+const ReportPaper = styled(Paper)(({ theme }) => ({
+  height: "90vh",
+  overflow: "auto",
+  marginLeft: "0.5rem",
+  maxWidth: "40vw",
+  [theme.breakpoints.down("lg")]: {
+    maxWidth: "80vw",
+  },
+  [theme.breakpoints.down("sm")]: {
+    maxWidth: "100vw",
+  },
 }));
 
 export default function TemplateContentPage() {
@@ -100,35 +114,43 @@ export default function TemplateContentPage() {
 
   return (
     <>
-      <Stack direction="row" padding="0.5rem">
-        <Typography variant="h3" display="inline-block" paddingRight="2em">
+      <Stack
+        direction="row"
+        spacing={{ sm: 0, md: 3, lg: 6 }}
+        padding="0.5rem"
+        marginTop="1rem"
+        sx={{ flexWrap: "wrap" }}
+      >
+        <Typography variant="h3" display="inline-block">
           Template: {currentTemplate ? currentTemplate.name : "not selected"}
         </Typography>
-        <FormControlLabel
-          control={
-            <Switch
-              checked={darkMode}
-              onChange={handleSwitchChange}
-              inputProps={{ "aria-label": "dark-mode-switch" }}
-            />
-          }
-          label="Dark Mode"
-        />
+        <Box>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={darkMode}
+                onChange={handleSwitchChange}
+                inputProps={{ "aria-label": "dark-mode-switch" }}
+              />
+            }
+            label="Dark Mode"
+          />
 
-        <FormControlLabel
-          control={
-            <Switch
-              checked={previewCalc}
-              onChange={handleSwitchChangePreview}
-              inputProps={{ "aria-label": "preview-calculation-switch" }}
-            />
-          }
-          label="Preview Calculation"
-        />
+          <FormControlLabel
+            control={
+              <Switch
+                checked={previewCalc}
+                onChange={handleSwitchChangePreview}
+                inputProps={{ "aria-label": "preview-calculation-switch" }}
+              />
+            }
+            label="Preview Calculation"
+          />
 
-        <Button type="button" variant="contained" onClick={updateContent}>
-          Save Changes
-        </Button>
+          <Button type="button" variant="contained" onClick={updateContent}>
+            Save Changes
+          </Button>
+        </Box>
       </Stack>
 
       {currentError && (
@@ -144,11 +166,9 @@ export default function TemplateContentPage() {
         <DraggableDivider
           leftChild={displayContent === LOADING_TEXT ? <h3>{LOADING_TEXT}</h3> : TemplateEditor}
           rightChild={
-            <Paper
-              sx={{ height: "90vh", overflow: "auto", marginLeft: "0.5rem", maxWidth: "40vw" }}
-            >
+            <ReportPaper>
               <CalcReport runResults={currentTemplateRun?.items || []} />
-            </Paper>
+            </ReportPaper>
           }
         />
       ) : (

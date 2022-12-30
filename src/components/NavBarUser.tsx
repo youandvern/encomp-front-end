@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import styled from "@emotion/styled";
 import { Button } from "@mui/material";
-
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import { useAppDispatch, useAppSelector } from "../hooks";
 import { isUserLoggedIn, getUser } from "../reduxSlices/auth";
 import { routes } from "../routes";
@@ -15,12 +16,14 @@ export default function NavBarUser() {
   const dispatch = useAppDispatch();
   const loggedIn = useAppSelector(isUserLoggedIn);
   const user = useAppSelector(getUser);
+  const theme = useTheme();
+  const smallScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
     <>
       {loggedIn && user ? (
         <>
-          {user.email}
+          {smallScreen ? user.email.split("@")[0] : user.email}
           {" |"}
           {
             <Button

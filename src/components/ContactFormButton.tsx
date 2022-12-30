@@ -44,6 +44,26 @@ const PlaceHolder = (status: SubmitStatusT) => {
   );
 };
 
+interface ContactButtonProps {
+  inline?: boolean;
+}
+
+const ContactButton = styled(IconButton)<ContactButtonProps>(({ theme, inline }) =>
+  inline
+    ? {}
+    : {
+        position: "fixed",
+        top: "6rem",
+        right: "2rem",
+        fontSize: "3rem",
+        [theme.breakpoints.down("md")]: {
+          top: "4rem",
+          right: "0.5rem",
+          fontSize: "2rem",
+        },
+      }
+);
+
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
     children: React.ReactElement<any, any>;
@@ -133,14 +153,14 @@ export default function ContactFormButton({ inline }: Props) {
         </DialogContent>
       </Dialog>
       <Tooltip title="Contact/Feedback">
-        <IconButton
+        <ContactButton
+          inline={inline}
           color={inline ? "inherit" : "primary"}
           size="medium"
-          sx={inline ? {} : { position: "fixed", top: "6rem", right: "2rem" }}
           onClick={handleClickOpen}
         >
-          <RateReviewIcon fontSize="large" />
-        </IconButton>
+          <RateReviewIcon fontSize="inherit" />
+        </ContactButton>
       </Tooltip>
     </>
   );

@@ -17,7 +17,7 @@ export default function TemplateUploadPage() {
 
   return (
     <>
-      <Stack spacing={2} alignItems="center">
+      <Stack spacing={2} alignItems="center" marginTop="2rem">
         <Stack direction="row">
           <Typography variant="h2">Templates: </Typography>
           <FormDialog

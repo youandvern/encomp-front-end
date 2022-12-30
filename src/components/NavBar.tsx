@@ -18,28 +18,39 @@ import { getCurrentTemplateId } from "../reduxSlices/template";
 import { getCalculationRunResults } from "../reduxSlices/calculation";
 import { GLOBAL_THEME } from "../App";
 
-const NavBarLink = styled(NavLink)({
-  textDecoration: "none",
-});
+interface StyledNavProps {
+  fullWidth: boolean;
+}
 
-const NavBarHref = styled("a")({
+const NavBarLink = styled(NavLink)<StyledNavProps>(({ theme, fullWidth }) => ({
   textDecoration: "none",
-});
+  width: fullWidth ? "100%" : "auto",
+}));
+
+const NavBarHref = styled("a")<StyledNavProps>(({ theme, fullWidth }) => ({
+  textDecoration: "none",
+  width: fullWidth ? "100%" : "auto",
+}));
 
 const MakeNaveLink = (
   route: RouteT,
   currentPath: string,
   handleCloseIconMenu: () => void,
+  dropMenu: boolean,
   calcId?: number,
   templateId?: number | null
 ) =>
   route.external ? (
-    <NavBarHref href={route.path()} target="_blank" rel="noopener noreferrer">
-      {NavButton(route, currentPath, false, handleCloseIconMenu)}
+    <NavBarHref href={route.path()} target="_blank" rel="noopener noreferrer" fullWidth={dropMenu}>
+      {NavButton(route, currentPath, false, handleCloseIconMenu, dropMenu)}
     </NavBarHref>
   ) : (
-    <NavBarLink key={"menu-link-" + route.path()} to={getPath(route, calcId, templateId)}>
-      {({ isActive }) => NavButton(route, currentPath, isActive, handleCloseIconMenu)}
+    <NavBarLink
+      key={"menu-link-" + route.path()}
+      to={getPath(route, calcId, templateId)}
+      fullWidth={dropMenu}
+    >
+      {({ isActive }) => NavButton(route, currentPath, isActive, handleCloseIconMenu, dropMenu)}
     </NavBarLink>
   );
 
@@ -47,18 +58,24 @@ const NavButton = (
   route: RouteT,
   currentPath: string,
   isActive: boolean,
-  handleCloseIconMenu: () => void
+  handleCloseIconMenu: () => void,
+  dropMenu?: boolean
 ) => (
   <Button
     onClick={handleCloseIconMenu}
+    fullWidth={dropMenu}
     sx={{
       my: 2,
       color:
         isActive && (route.path() !== "/" || currentPath === "/")
           ? GLOBAL_THEME.palette.secondary.main
+          : dropMenu
+          ? GLOBAL_THEME.palette.primary.main
           : "white",
       display: "block",
       fontWeight: "bold",
+      margin: dropMenu ? "0" : "0.5rem",
+      textAlign: dropMenu ? "left" : "center",
     }}
   >
     {route.display}
@@ -115,10 +132,12 @@ export default function NavBar() {
           sx={{
             display: { xs: "none", lg: "flex" },
             backgroundColor: "white",
+            marginInlineEnd: "1rem",
+            height: "3.5rem",
           }}
         >
           <Link to={routes.home.path()}>
-            <img src="/ENCOMP.png" alt="Encomp Logo" className="main-logo"></img>
+            <img src="/efficalc.png" alt="Efficalc Logo" className="main-logo"></img>
           </Link>
         </Box>
 
@@ -156,12 +175,19 @@ export default function NavBar() {
                 shouldDisplay(route, isLoggedIn, isTemplateSelected, isCalcRunReceived)
               )
               .map((route) => (
-                <MenuItem key={"menu-item-" + route.path()} onClick={handleCloseIconMenu}>
-                  <Typography textAlign="center">
-                    <NavBarLink to={getPath(route, currentCalcRun?.id, currentTemplateId)}>
-                      {route.display}
-                    </NavBarLink>
-                  </Typography>
+                <MenuItem
+                  key={"menu-item-" + route.path()}
+                  onClick={handleCloseIconMenu}
+                  sx={{ padding: "0px" }}
+                >
+                  {MakeNaveLink(
+                    route,
+                    currentPath,
+                    handleCloseIconMenu,
+                    true,
+                    currentCalcRun?.id,
+                    currentTemplateId
+                  )}
                 </MenuItem>
               ))}
           </Menu>
@@ -170,12 +196,12 @@ export default function NavBar() {
         <Box
           sx={{
             display: { xs: "flex", lg: "none" },
-            height: "100%",
-            backgroundColor: "white",
+            height: "3rem",
+            backgroundColor: "transparent",
           }}
         >
           <Link to={routes.home.path()}>
-            <img src="/ENCOMP.png" alt="Encomp Logo" className="main-logo"></img>
+            <img src="/efficalc.png" alt="Efficalc Logo" className="main-logo"></img>
           </Link>
         </Box>
         <Box
@@ -195,12 +221,13 @@ export default function NavBar() {
                 route,
                 currentPath,
                 handleCloseIconMenu,
+                false,
                 currentCalcRun?.id,
                 currentTemplateId
               )
             )}
         </Box>
-        <Box sx={{ flexGrow: 0 }}>
+        <Box sx={{ flexGrow: 0, textAlign: "right" }}>
           <NavBarUser />
         </Box>
       </Toolbar>

@@ -1,7 +1,10 @@
+html {
+  font-size: 18px;
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
-    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  font-family: "Sarabun", "Roboto", "Helvetica Neue", "Arial", "sans-serif";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -31,7 +34,8 @@ code {
 
 .main-logo {
   object-fit: contain;
-  height: 4rem;
+  height: 100%;
+  max-width: 40vw;
 }
 
 #root-and-bottom-container {

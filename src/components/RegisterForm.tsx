@@ -27,7 +27,7 @@ export default function RegisterForm() {
   };
 
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="sm" sx={{ marginBlock: "2rem" }}>
       {authStatus === "loading" ? (
         <FormPendingSkeleton />
       ) : (

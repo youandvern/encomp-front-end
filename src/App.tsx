@@ -68,6 +68,7 @@ export const GLOBAL_THEME = createTheme({
       fontSize: "1rem",
       fontWeight: "700",
     },
+    fontFamily: ["Sarabun", "Roboto", "Helvetica Neue", "Arial", "sans-serif"].join(","),
   },
 });
 
